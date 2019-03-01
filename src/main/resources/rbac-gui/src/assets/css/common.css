@@ -1,0 +1,37 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 13 Feb 2019, 08:19:25
+    Author     : Alexandr Omeluaniuk
+*/
+
+html * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+body {
+    background-color: #EEEEEE;
+    color: #3C4858;
+    margin: 0;
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    line-height: 1.5em;
+}
+a {
+    color: #9c27b0;
+    text-decoration: none;
+}
+a:hover, a:focus {
+    color: #89229b;
+    text-decoration: none;
+}
+* {
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    -webkit-tap-highlight-color: transparent;
+}
+*:focus {
+    outline: 0;
+}
