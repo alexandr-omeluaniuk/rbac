@@ -4,9 +4,8 @@
  * and open the template in the editor.
  */
 
-open module spring.rbac {
-    requires java.persistence;
-    requires java.validation;
-    requires java.annotation;
+module spring.rbac.test {
+    requires spring.rbac;
+    requires junit;
     requires java.sql;
 }

@@ -18,6 +18,12 @@ import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 import Drawer from "@material-ui/core/Drawer";
 import Divider from "@material-ui/core/Divider";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import navigationRoutes from './../routing/app-admin';
+import { NavLink } from "react-router-dom";
 
 class Main extends React.Component {
     state = {
@@ -58,6 +64,27 @@ class Main extends React.Component {
         }
         return arr;
     };
+    createList = (listData) => {
+        const { classes } = this.props;
+        return (
+            <List>
+                {
+                    listData.map((prop, key) => {
+                        if (prop.redirect) return null;
+                        return (
+                                <NavLink to={prop.path} key={key}>
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            {typeof prop.icon === "string" ? (<Icon>{prop.icon}</Icon>) : (<prop.icon />)}
+                                        </ListItemIcon>
+                                        <ListItemText primary={prop.name} inset/>
+                                    </ListItem>
+                                </NavLink>
+                            );
+                    })
+                }
+            </List>
+    )};
     handleDrawerToggle = () => {
         this.setState({ menuOpen: !this.state.menuOpen });
     };
@@ -88,11 +115,12 @@ class Main extends React.Component {
                             </IconButton>
                         </div>
                         <Divider />
+                        {this.createList(navigationRoutes)}
                     </Drawer>
                     <main className={classNames(classes.content, {
                         [classes.contentShift]: menuOpen
                     })}>
-                            TODO
+                        {this.createNavRoutes(navigationRoutes)}
                     </main>
                 </div>
             </MuiThemeProvider>
@@ -172,7 +200,9 @@ const styles = theme => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen
         }),
-        marginLeft: -drawerWidth
+        marginLeft: -drawerWidth,
+        marginTop: theme.mixins.toolbar.minHeight,
+        zIndex: '4'
     },
     contentShift: {
         transition: theme.transitions.create('margin', {
@@ -180,6 +210,41 @@ const styles = theme => ({
             duration: theme.transitions.duration.enteringScreen
         }),
         marginLeft: 0
+    },
+    slideEnter: {
+        [theme.breakpoints.up("md")]: {
+            transform: `translateX(100%) translateX(${theme.spacing.unit * 4}px)`
+        },
+        [theme.breakpoints.down("sm")]: {
+            transform: `translateX(100%) translateX(${theme.spacing.unit * 2}px)`
+        }
+    },
+    slideEnterActive: {
+        transform: 'translateX(0%)',
+        transition: `transform ${slideDuration}ms ease-in-out`
+    },
+    slideExit: {
+        transform: 'translateX(0%)',
+        position: 'absolute',
+        [theme.breakpoints.up("md")]: {
+            top: 0,
+            left: 0,
+            right: 0
+        },
+        [theme.breakpoints.down("sm")]: {
+            top: 0,
+            left: 0,
+            right: 0
+        }
+    },
+    slideExitActive: {
+        transition: `transform ${slideDuration}ms ease-in-out`,
+        [theme.breakpoints.up("md")]: {
+            transform: `translateX(-100%) translateX(-${theme.spacing.unit * 4}px)`
+        },
+        [theme.breakpoints.down("sm")]: {
+            transform: `translateX(-100%) translateX(-${theme.spacing.unit * 2}px)`
+        }
     }
 });
 
