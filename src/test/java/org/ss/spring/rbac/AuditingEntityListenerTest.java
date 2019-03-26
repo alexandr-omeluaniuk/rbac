@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 import org.ss.spring.rbac.config.TestConfiguration;
 
 /**
@@ -17,7 +18,8 @@ import org.ss.spring.rbac.config.TestConfiguration;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfiguration.class)
-public class InitTest {
+@Transactional
+public class AuditingEntityListenerTest {
     @Test
     public void testInit() {
         System.out.println("INIT!");

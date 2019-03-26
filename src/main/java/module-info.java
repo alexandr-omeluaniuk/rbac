@@ -9,4 +9,9 @@ open module spring.rbac {
     requires java.validation;
     requires java.annotation;
     requires java.sql;
+    requires spring.context;
+    requires spring.beans;
+    exports org.ss.spring.rbac.entity;
+    exports org.ss.spring.rbac.api;
+    exports org.ss.spring.rbac.interceptor;
 }
