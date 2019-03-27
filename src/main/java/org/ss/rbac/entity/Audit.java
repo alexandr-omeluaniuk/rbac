@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.ss.spring.rbac.entity;
+package org.ss.rbac.entity;
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -25,7 +25,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import org.ss.spring.rbac.interceptor.AuditingEntityListener;
+import org.ss.rbac.interceptor.AuditingEntityListener;
 
 /**
  * Auditing superclass.

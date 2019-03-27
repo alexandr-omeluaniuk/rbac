@@ -21,18 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.spring.rbac.api;
+package org.ss.rbac.interceptor;
 
-import org.ss.spring.rbac.entity.User;
+import java.util.Date;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import org.ss.rbac.api.UserService;
+import org.ss.rbac.entity.Audit;
 
 /**
- * User service.
+ * Audit entity listener.
  * @author ss
  */
-public interface UserService {
-    /**
-     * Get current user.
-     * @return current user.
-     */
-    User currentUser();
+public class AuditingEntityListener {
+    /** User service. */
+    private UserService userService;
+    @PrePersist
+    public void prePersist(Audit auditable) {
+        auditable.setCreatedBy(userService.currentUser());
+        auditable.setCreatedDate(new Date());
+    }
+    @PreUpdate
+    public void preUpdate(Audit auditable) {
+        auditable.setLastModifiedBy(userService.currentUser());
+        auditable.setLastModifiedDate(new Date());
+    }
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.spring.rbac.entity.test;
+package org.ss.rbac.test.entity;
 
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -31,7 +31,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import org.ss.spring.rbac.entity.Audit;
+import org.ss.rbac.entity.Audit;
 
 /**
  * Product.
