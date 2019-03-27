@@ -7,7 +7,7 @@
 module ss.rbac {
     requires java.persistence;
     requires java.validation;
-    //exports org.ss.spring.rbac.entity;
+    exports org.ss.rbac.entity;
     //exports org.ss.spring.rbac.api;
     //exports org.ss.spring.rbac.interceptor;
 }

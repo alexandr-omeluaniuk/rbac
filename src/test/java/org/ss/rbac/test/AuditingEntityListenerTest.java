@@ -5,6 +5,7 @@
  */
 package org.ss.rbac.test;
 
+import javax.persistence.Persistence;
 import org.junit.Test;
 
 /**
@@ -14,6 +15,7 @@ import org.junit.Test;
 public class AuditingEntityListenerTest {
     @Test
     public void testInit() {
-        System.out.println("INIT!");
+        System.out.println("TEST WORKS!!!");
+        Persistence.createEntityManagerFactory("rbac_test");
     }
 }
