@@ -21,18 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.api;
+package org.ss.rbac.test.api.impl;
 
+import org.ss.rbac.api.UserProvider;
 import org.ss.rbac.entity.User;
 
 /**
- * User service.
+ *
  * @author ss
  */
-public interface UserService {
-    /**
-     * Get current user.
-     * @return current user.
-     */
-    User currentUser();
+public class UserProviderImpl implements UserProvider {
+    @Override
+    public User getCurrentUser() {
+        User user = new User();
+        return user;
+    }
 }

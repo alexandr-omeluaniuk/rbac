@@ -26,8 +26,8 @@ package org.ss.rbac.interceptor;
 import java.util.Date;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import org.ss.rbac.api.UserService;
 import org.ss.rbac.entity.Audit;
+import org.ss.rbac.api.UserProvider;
 
 /**
  * Audit entity listener.
@@ -35,15 +35,15 @@ import org.ss.rbac.entity.Audit;
  */
 public class AuditingEntityListener {
     /** User service. */
-    private UserService userService;
+    private UserProvider userService;
     @PrePersist
     public void prePersist(Audit auditable) {
-        auditable.setCreatedBy(userService.currentUser());
+        auditable.setCreatedBy(userService.getCurrentUser());
         auditable.setCreatedDate(new Date());
     }
     @PreUpdate
     public void preUpdate(Audit auditable) {
-        auditable.setLastModifiedBy(userService.currentUser());
+        auditable.setLastModifiedBy(userService.getCurrentUser());
         auditable.setLastModifiedDate(new Date());
     }
 }

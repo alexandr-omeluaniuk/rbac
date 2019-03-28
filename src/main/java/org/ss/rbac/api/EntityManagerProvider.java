@@ -21,9 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.ss.rbac.api;
 
-module ss.rbac.test {
-    requires ss.rbac;
-    requires junit;
-    provides org.ss.rbac.api.UserProvider with org.ss.rbac.test.api.impl.UserProviderImpl;
+import javax.persistence.EntityManager;
+
+/**
+ * Entity manager provider.
+ * @author ss
+ */
+public interface EntityManagerProvider {
+    /**
+     * Get entity manager.
+     * @return entity manager factory.
+     */
+    EntityManager getEntityManager();
 }

@@ -21,9 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.ss.rbac.test;
 
-module ss.rbac.test {
-    requires ss.rbac;
-    requires junit;
-    provides org.ss.rbac.api.UserProvider with org.ss.rbac.test.api.impl.UserProviderImpl;
+import javax.persistence.EntityManagerFactory;
+import org.junit.BeforeClass;
+
+/**
+ *
+ * @author ss
+ */
+public abstract class AbstractTest {
+    private static EntityManagerFactory emf;
+    @BeforeClass
+    public static void before() {
+        //emf = Persistence.createEntityManagerFactory("rbac_test");
+    }
 }

@@ -5,17 +5,24 @@
  */
 package org.ss.rbac.test;
 
-import javax.persistence.Persistence;
+import java.util.Iterator;
+import java.util.ServiceLoader;
 import org.junit.Test;
+import org.ss.rbac.api.UserProvider;
 
 /**
  *
  * @author ss
  */
-public class AuditingEntityListenerTest {
+public class AuditingEntityListenerTest extends AbstractTest {
     @Test
     public void testInit() {
-        System.out.println("TEST WORKS!!!");
-        Persistence.createEntityManagerFactory("rbac_test");
+        ServiceLoader<UserProvider> serviceLoader = ServiceLoader.load(UserProvider.class);
+        System.out.println("=====================================================================");
+        Iterator<UserProvider> itr = serviceLoader.iterator();
+        while (itr.hasNext()) {
+            System.out.println(itr.next());
+        }
+        System.out.println("=====================================================================");
     }
 }
