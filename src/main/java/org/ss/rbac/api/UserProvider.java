@@ -27,6 +27,7 @@ import org.ss.rbac.entity.User;
 
 /**
  * User provider.
+ * Requires external implementation.
  * @author ss
  */
 public interface UserProvider {

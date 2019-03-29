@@ -27,6 +27,7 @@ import javax.persistence.EntityManager;
 
 /**
  * Entity manager provider.
+ * Requires external implementation.
  * @author ss
  */
 public interface EntityManagerProvider {

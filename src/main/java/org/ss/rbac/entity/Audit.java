@@ -25,7 +25,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import org.ss.rbac.interceptor.AuditingEntityListener;
+import org.ss.rbac.api.AuditingEntityListener;
 
 /**
  * Auditing superclass.

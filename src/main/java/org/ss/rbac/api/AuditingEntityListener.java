@@ -21,13 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.interceptor;
+package org.ss.rbac.api;
 
 import java.util.Date;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import org.ss.rbac.entity.Audit;
-import org.ss.rbac.api.UserProvider;
 
 /**
  * Audit entity listener.
@@ -35,15 +34,24 @@ import org.ss.rbac.api.UserProvider;
  */
 public class AuditingEntityListener {
     /** User service. */
-    private UserProvider userService;
+    private final UserProvider userProvider = ServiceProvider.load(UserProvider.class);
+    /**
+     * Handle pre persist operations.
+     * @param auditable auditable entity.
+     */
     @PrePersist
     public void prePersist(Audit auditable) {
-        auditable.setCreatedBy(userService.getCurrentUser());
+        auditable.setCreatedBy(userProvider.getCurrentUser());
         auditable.setCreatedDate(new Date());
+        System.out.println(auditable.getCreatedBy());
     }
+    /**
+     * Handle pre update operations.
+     * @param auditable auditable entity.
+     */
     @PreUpdate
     public void preUpdate(Audit auditable) {
-        auditable.setLastModifiedBy(userService.getCurrentUser());
+        auditable.setLastModifiedBy(userProvider.getCurrentUser());
         auditable.setLastModifiedDate(new Date());
     }
 }

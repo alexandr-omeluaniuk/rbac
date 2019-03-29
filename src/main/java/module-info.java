@@ -7,8 +7,12 @@
 module ss.rbac {
     requires java.persistence;
     requires java.validation;
+    
     exports org.ss.rbac.entity;
     exports org.ss.rbac.api;
+    
+    opens org.ss.rbac.entity;
+    
     uses org.ss.rbac.api.UserProvider;
     uses org.ss.rbac.api.EntityManagerProvider;
 }

@@ -23,17 +23,31 @@
  */
 package org.ss.rbac.test;
 
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityManager;
 import org.junit.BeforeClass;
+import org.ss.rbac.api.EntityManagerProvider;
+import org.ss.rbac.api.ServiceProvider;
+import org.ss.rbac.entity.User;
+import org.ss.rbac.test.api.impl.UserProviderImpl;
 
 /**
  *
  * @author ss
  */
 public abstract class AbstractTest {
-    private static EntityManagerFactory emf;
     @BeforeClass
     public static void before() {
-        //emf = Persistence.createEntityManagerFactory("rbac_test");
+        User user = new User();
+        user.setActive(true);
+        user.setFirstname("Gareth");
+        user.setLastname("Richardson");
+        user.setPassword("paSSword");
+        user.setUsername("gareth.richardson@test.com");
+        EntityManagerProvider emProvider = ServiceProvider.load(EntityManagerProvider.class);
+        EntityManager em = emProvider.getEntityManager();
+        em.getTransaction().begin();
+        em.persist(user);
+        em.getTransaction().commit();
+        UserProviderImpl.auth(user);
     }
 }

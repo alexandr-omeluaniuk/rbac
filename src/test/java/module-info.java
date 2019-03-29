@@ -24,10 +24,32 @@
 
 module ss.rbac.test {
     requires ss.rbac;
-    requires junit;
+    requires com.h2database;
     requires org.hibernate.orm.core;
-    //requires org.hibernate.validator;
+    requires org.hibernate.validator;
+    requires junit;
+    requires com.sun.xml.fastinfoset;
+    requires antlr;
+    requires net.bytebuddy;
+    requires com.fasterxml.classmate;
+    requires dom4j;
+    requires hamcrest.core;
+    requires org.hibernate.commons.annotations;
+    requires com.sun.istack.runtime;
+    requires jandex;
+    requires javassist;
+    requires java.activation;
+    requires java.xml.bind;
+    requires com.sun.xml.bind;
+    requires org.jboss.logging;
+    requires java.transaction;
+    requires org.jvnet.staxex;
+    requires com.sun.xml.txw2;
+    
     exports org.ss.rbac.test;
+    
+    opens org.ss.rbac.test.entity;
+    
     uses org.ss.rbac.api.EntityManagerProvider;
     provides org.ss.rbac.api.UserProvider with org.ss.rbac.test.api.impl.UserProviderImpl;
     provides org.ss.rbac.api.EntityManagerProvider with org.ss.rbac.test.api.impl.EntityManagerProviderImpl;

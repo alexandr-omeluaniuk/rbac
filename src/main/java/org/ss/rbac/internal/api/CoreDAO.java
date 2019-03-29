@@ -21,25 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.test.api.impl;
+package org.ss.rbac.internal.api;
 
-import org.ss.rbac.api.UserProvider;
-import org.ss.rbac.entity.User;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import org.ss.rbac.api.EntityManagerProvider;
+import org.ss.rbac.api.ServiceProvider;
 
 /**
  *
  * @author ss
  */
-public class UserProviderImpl implements UserProvider {
-    private static User user;
-    public static void auth(User u) {
-        user = u;
-    }
-    @Override
-    public User getCurrentUser() {
-        if (user == null) {
-            
-        }
-        return user;
+public class CoreDAO {
+    /** Entity manager provider. */
+    private final EntityManagerProvider emProvider = ServiceProvider.load(
+            EntityManagerProvider.class);
+    public <T> T create(T entity) {
+        EntityManager em = emProvider.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        em.persist(entity);
+        tx.commit();
+        return entity;
     }
 }

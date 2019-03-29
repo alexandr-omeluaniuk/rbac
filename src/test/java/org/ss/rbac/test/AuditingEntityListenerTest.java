@@ -5,6 +5,7 @@
  */
 package org.ss.rbac.test;
 
+import javax.persistence.EntityManager;
 import org.junit.Assert;
 import org.junit.Test;
 import org.ss.rbac.api.EntityManagerProvider;
@@ -16,12 +17,25 @@ import org.ss.rbac.test.entity.Product;
  * @author ss
  */
 public class AuditingEntityListenerTest extends AbstractTest {
-    private final EntityManagerProvider em = ServiceProvider.load(EntityManagerProvider.class);
+    private final EntityManagerProvider emProvider = ServiceProvider.load(EntityManagerProvider.class);
     @Test
-    public void test() {
+    public void testAuditing() throws Exception {
         Product product = new Product();
         product.setName("Soap");
-        em.getEntityManager().persist(product);
+        EntityManager em = emProvider.getEntityManager();
+        em.getTransaction().begin();
+        em.persist(product);
+        em.getTransaction().commit();
         Assert.assertNotNull(product.getId());
+        Assert.assertNotNull(product.getCreatedBy());
+        Assert.assertNotNull(product.getCreatedDate());
+        Assert.assertNull(product.getLastModifiedBy());
+        Assert.assertNull(product.getLastModifiedDate());
+        product.setName("Apple");
+        em.getTransaction().begin();
+        em.merge(product);
+        em.getTransaction().commit();
+        Assert.assertNotNull(product.getLastModifiedBy());
+        Assert.assertNotNull(product.getLastModifiedDate());
     }
 }
