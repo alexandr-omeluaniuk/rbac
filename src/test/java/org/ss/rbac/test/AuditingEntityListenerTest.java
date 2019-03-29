@@ -8,8 +8,8 @@ package org.ss.rbac.test;
 import javax.persistence.EntityManager;
 import org.junit.Assert;
 import org.junit.Test;
-import org.ss.rbac.api.EntityManagerProvider;
-import org.ss.rbac.api.ServiceProvider;
+import org.ss.rbac.configuration.EntityManagerProvider;
+import org.ss.rbac.test.api.impl.EntityManagerProviderImpl;
 import org.ss.rbac.test.entity.Product;
 
 /**
@@ -22,8 +22,7 @@ public class AuditingEntityListenerTest extends DatabaseTest {
     private static final System.Logger LOG =
             System.getLogger(AuditingEntityListenerTest.class.getName());
     /** Entity manager provider. */
-    private final EntityManagerProvider emProvider =
-            ServiceProvider.load(EntityManagerProvider.class);
+    private final EntityManagerProvider emProvider = new EntityManagerProviderImpl();
     @Test
     public void testAuditing() throws Exception {
         LOG.log(System.Logger.Level.INFO, "----------------- testAuditing -----------------------");

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.api;
+package org.ss.rbac.configuration;
 
 import org.ss.rbac.entity.User;
 

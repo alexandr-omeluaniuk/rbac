@@ -25,8 +25,7 @@ package org.ss.rbac.internal.api;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import org.ss.rbac.api.EntityManagerProvider;
-import org.ss.rbac.api.ServiceProvider;
+import org.ss.rbac.configuration.EntityManagerProvider;
 
 /**
  *

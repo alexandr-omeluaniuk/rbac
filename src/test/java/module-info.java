@@ -50,7 +50,10 @@ module ss.rbac.test {
     
     opens org.ss.rbac.test.entity;
     
-    uses org.ss.rbac.api.EntityManagerProvider;
-    provides org.ss.rbac.api.UserProvider with org.ss.rbac.test.api.impl.UserProviderImpl;
-    provides org.ss.rbac.api.EntityManagerProvider with org.ss.rbac.test.api.impl.EntityManagerProviderImpl;
+    uses org.ss.rbac.configuration.EntityManagerProvider;
+    
+    provides org.ss.rbac.configuration.UserProvider 
+            with org.ss.rbac.test.api.impl.UserProviderImpl;
+    provides org.ss.rbac.configuration.EntityManagerProvider 
+            with org.ss.rbac.test.api.impl.EntityManagerProviderImpl;
 }

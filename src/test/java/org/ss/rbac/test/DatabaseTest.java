@@ -25,9 +25,9 @@ package org.ss.rbac.test;
 
 import javax.persistence.EntityManager;
 import org.junit.BeforeClass;
-import org.ss.rbac.api.EntityManagerProvider;
-import org.ss.rbac.api.ServiceProvider;
+import org.ss.rbac.configuration.EntityManagerProvider;
 import org.ss.rbac.entity.User;
+import org.ss.rbac.test.api.impl.EntityManagerProviderImpl;
 import org.ss.rbac.test.api.impl.UserProviderImpl;
 
 /**
@@ -43,7 +43,7 @@ public abstract class DatabaseTest {
         user.setLastname("Richardson");
         user.setPassword("paSSword");
         user.setUsername("gareth.richardson@test.com");
-        EntityManagerProvider emProvider = ServiceProvider.load(EntityManagerProvider.class);
+        EntityManagerProvider emProvider = new EntityManagerProviderImpl();
         EntityManager em = emProvider.getEntityManager();
         em.getTransaction().begin();
         em.persist(user);

@@ -23,7 +23,7 @@
  */
 package org.ss.rbac.test.api.impl;
 
-import org.ss.rbac.api.UserProvider;
+import org.ss.rbac.configuration.UserProvider;
 import org.ss.rbac.entity.User;
 
 /**

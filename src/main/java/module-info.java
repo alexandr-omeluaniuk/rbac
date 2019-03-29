@@ -11,12 +11,13 @@ module ss.rbac {
     
     exports org.ss.rbac.entity;
     exports org.ss.rbac.api;
+    exports org.ss.rbac.configuration;
     exports org.ss.rbac.constant;
     
     opens org.ss.rbac.entity;
     
-    uses org.ss.rbac.api.UserProvider;
-    uses org.ss.rbac.api.EntityManagerProvider;
+    uses org.ss.rbac.configuration.UserProvider;
+    uses org.ss.rbac.configuration.EntityManagerProvider;
     
-    provides java.lang.System.LoggerFinder with org.ss.rbac.api.RbacLoggerFinder;
+    provides java.lang.System.LoggerFinder with org.ss.rbac.internal.api.RbacLoggerFinder;
 }

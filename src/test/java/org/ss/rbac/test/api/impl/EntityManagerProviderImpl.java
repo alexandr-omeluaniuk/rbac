@@ -26,7 +26,7 @@ package org.ss.rbac.test.api.impl;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import org.ss.rbac.api.EntityManagerProvider;
+import org.ss.rbac.configuration.EntityManagerProvider;
 
 /**
  *

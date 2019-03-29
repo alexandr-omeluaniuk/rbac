@@ -21,29 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.api;
+package org.ss.rbac.configuration;
 
-import java.util.Iterator;
-import java.util.ServiceLoader;
-import org.ss.rbac.exception.ServiceNotFoundException;
+import javax.persistence.EntityManager;
 
 /**
- * Service provider.
+ * Entity manager provider.
+ * Requires external implementation.
  * @author ss
  */
-public class ServiceProvider {
+public interface EntityManagerProvider {
     /**
-     * Load service.
-     * @param <T> service type.
-     * @param clazz service class.
-     * @return service singleton.
+     * Get entity manager.
+     * @return entity manager factory.
      */
-    public static <T> T load(Class<T> clazz) {
-        ServiceLoader<T> serviceLoader = ServiceLoader.load(clazz);
-        Iterator<T> itr = serviceLoader.iterator();
-        while (itr.hasNext()) {
-            return itr.next();
-        }
-        throw new ServiceNotFoundException("Service not found: " + clazz.getName());
-    }
+    EntityManager getEntityManager();
 }

@@ -44,7 +44,7 @@ public class RbacLogger implements System.Logger {
     }
     @Override
     public String getName() {
-        return "RBAC";
+        return loggerName;
     }
     @Override
     public boolean isLoggable(Level level) {
