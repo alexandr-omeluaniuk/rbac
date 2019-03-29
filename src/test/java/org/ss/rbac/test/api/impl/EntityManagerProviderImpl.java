@@ -21,13 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.ss.rbac.test.api.impl;
 
-module ss.rbac.test {
-    requires ss.rbac;
-    requires junit;
-    exports org.ss.rbac.test;
-    uses org.ss.rbac.api.UserProvider;
-    uses org.ss.rbac.api.EntityManagerProvider;
-    provides org.ss.rbac.api.UserProvider with org.ss.rbac.test.api.impl.UserProviderImpl;
-    provides org.ss.rbac.api.EntityManagerProvider with org.ss.rbac.test.api.impl.EntityManagerProviderImpl;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import org.ss.rbac.api.EntityManagerProvider;
+
+/**
+ *
+ * @author ss
+ */
+public class EntityManagerProviderImpl implements EntityManagerProvider {
+    private static EntityManagerFactory emf;
+    @Override
+    public EntityManager getEntityManager() {
+        if (emf == null) {
+            emf = Persistence.createEntityManagerFactory("rbac_test");
+        }
+        return emf.createEntityManager();
+    }
 }

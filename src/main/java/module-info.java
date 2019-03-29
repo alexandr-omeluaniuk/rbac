@@ -10,4 +10,5 @@ module ss.rbac {
     exports org.ss.rbac.entity;
     exports org.ss.rbac.api;
     uses org.ss.rbac.api.UserProvider;
+    uses org.ss.rbac.api.EntityManagerProvider;
 }
