@@ -21,12 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.ss.rbac.exception;
 
-module ss.rbac.test {
-    requires ss.rbac;
-    requires junit;
-    exports org.ss.rbac.test;
-    uses org.ss.rbac.api.EntityManagerProvider;
-    provides org.ss.rbac.api.UserProvider with org.ss.rbac.test.api.impl.UserProviderImpl;
-    provides org.ss.rbac.api.EntityManagerProvider with org.ss.rbac.test.api.impl.EntityManagerProviderImpl;
+/**
+ * Service not found.
+ * @author ss
+ */
+public class ServiceNotFoundException extends RuntimeException {
+    /**
+     * Constructor.
+     * @param msg message.
+     */
+    public ServiceNotFoundException(String msg) {
+        super(msg);
+    }
 }

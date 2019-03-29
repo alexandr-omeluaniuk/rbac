@@ -21,12 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.ss.rbac.api;
 
-module ss.rbac.test {
-    requires ss.rbac;
-    requires junit;
-    exports org.ss.rbac.test;
-    uses org.ss.rbac.api.EntityManagerProvider;
-    provides org.ss.rbac.api.UserProvider with org.ss.rbac.test.api.impl.UserProviderImpl;
-    provides org.ss.rbac.api.EntityManagerProvider with org.ss.rbac.test.api.impl.EntityManagerProviderImpl;
+import java.util.Iterator;
+import java.util.ServiceLoader;
+import org.ss.rbac.exception.ServiceNotFoundException;
+
+/**
+ * Service provider.
+ * @author ss
+ */
+public class ServiceProvider {
+    /**
+     * Load service.
+     * @param <T> service type.
+     * @param clazz service class.
+     * @return service singleton.
+     */
+    public static <T> T load(Class<T> clazz) {
+        ServiceLoader<T> serviceLoader = ServiceLoader.load(clazz);
+        Iterator<T> itr = serviceLoader.iterator();
+        while (itr.hasNext()) {
+            return itr.next();
+        }
+        throw new ServiceNotFoundException("Service not found: " + clazz.getName());
+    }
 }
