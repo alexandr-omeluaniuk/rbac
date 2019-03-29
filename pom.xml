@@ -35,12 +35,12 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.4.199</version>
             <scope>test</scope>
-        </dependency>
+        </dependency-->
     </dependencies>
     <build>
         <resources>
@@ -59,6 +59,20 @@
                 <version>3.8.0</version>
                 <configuration>
                     <release>11</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M3</version>
+                <configuration>
+                    <classpathDependencyScopeExclude>test</classpathDependencyScopeExclude>
+                    <classesDirectory>path/to/none</classesDirectory>
+                    <argLine>
+                        --module-path target/classes:target/test-classes:${settings.localRepository}/junit/junit/4.12/junit-4.12.jar:${settings.localRepository}/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:${settings.localRepository}/javax/persistence/javax.persistence-api/2.2/javax.persistence-api-2.2.jar:${settings.localRepository}/javax/validation/validation-api/2.0.1.Final/validation-api-2.0.1.Final.jar
+                        --add-modules junit,hamcrest.core,ss.rbac,ss.rbac.test
+                    </argLine>
+                    <jvm>/usr/lib/jvm/jdk-11.0.1/bin/java</jvm>
                 </configuration>
             </plugin>
         </plugins>

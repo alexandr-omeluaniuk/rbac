@@ -20,6 +20,7 @@ public class AuditingEntityListenerTest extends AbstractTest {
         ServiceLoader<UserProvider> serviceLoader = ServiceLoader.load(UserProvider.class);
         System.out.println("=====================================================================");
         Iterator<UserProvider> itr = serviceLoader.iterator();
+        System.out.println(itr.hasNext());
         while (itr.hasNext()) {
             System.out.println(itr.next());
         }
