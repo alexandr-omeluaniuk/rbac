@@ -5,9 +5,11 @@
  */
 package org.ss.rbac.test;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.ss.rbac.api.EntityManagerProvider;
 import org.ss.rbac.api.ServiceProvider;
+import org.ss.rbac.test.entity.Product;
 
 /**
  *
@@ -16,7 +18,10 @@ import org.ss.rbac.api.ServiceProvider;
 public class AuditingEntityListenerTest extends AbstractTest {
     private final EntityManagerProvider em = ServiceProvider.load(EntityManagerProvider.class);
     @Test
-    public void testInit() {
-        
+    public void test() {
+        Product product = new Product();
+        product.setName("Soap");
+        em.getEntityManager().persist(product);
+        Assert.assertNotNull(product.getId());
     }
 }

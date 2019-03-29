@@ -25,6 +25,8 @@
 module ss.rbac.test {
     requires ss.rbac;
     requires junit;
+    requires org.hibernate.orm.core;
+    //requires org.hibernate.validator;
     exports org.ss.rbac.test;
     uses org.ss.rbac.api.EntityManagerProvider;
     provides org.ss.rbac.api.UserProvider with org.ss.rbac.test.api.impl.UserProviderImpl;

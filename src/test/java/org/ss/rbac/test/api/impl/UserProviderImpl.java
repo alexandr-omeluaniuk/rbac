@@ -23,6 +23,8 @@
  */
 package org.ss.rbac.test.api.impl;
 
+import org.ss.rbac.api.EntityManagerProvider;
+import org.ss.rbac.api.ServiceProvider;
 import org.ss.rbac.api.UserProvider;
 import org.ss.rbac.entity.User;
 
@@ -31,9 +33,19 @@ import org.ss.rbac.entity.User;
  * @author ss
  */
 public class UserProviderImpl implements UserProvider {
+    private final EntityManagerProvider em = ServiceProvider.load(EntityManagerProvider.class);
+    private static User user;
     @Override
     public User getCurrentUser() {
-        User user = new User();
+        if (user == null) {
+            user = new User();
+            user.setActive(true);
+            user.setFirstname("Gareth");
+            user.setLastname("Richardson");
+            user.setPassword("paSSword");
+            user.setUsername("gareth.richardson@test.com");
+            em.getEntityManager().persist(user);
+        }
         return user;
     }
 }
