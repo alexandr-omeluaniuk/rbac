@@ -34,7 +34,7 @@ import org.ss.rbac.test.api.impl.UserProviderImpl;
  *
  * @author ss
  */
-public abstract class AbstractTest {
+public abstract class DatabaseTest {
     @BeforeClass
     public static void before() {
         User user = new User();

@@ -21,36 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.api;
+package org.ss.rbac.test;
 
-import java.util.Date;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import org.ss.rbac.entity.Audit;
+import org.junit.Assert;
+import org.junit.Test;
+import org.ss.rbac.constant.DataPermission;
 
 /**
- * Audit entity listener.
+ *
  * @author ss
  */
-public class AuditingEntityListener {
-    /** User service. */
-    private final UserProvider userProvider = ServiceProvider.load(UserProvider.class);
-    /**
-     * Handle pre persist operations.
-     * @param auditable auditable entity.
-     */
-    @PrePersist
-    public void prePersist(Audit auditable) {
-        auditable.setCreatedBy(userProvider.getCurrentUser());
-        auditable.setCreatedDate(new Date());
-    }
-    /**
-     * Handle pre update operations.
-     * @param auditable auditable entity.
-     */
-    @PreUpdate
-    public void preUpdate(Audit auditable) {
-        auditable.setLastModifiedBy(userProvider.getCurrentUser());
-        auditable.setLastModifiedDate(new Date());
+public class DataPermissionTest {
+    /** Logger. */
+    private static final System.Logger LOG = System.getLogger(DataPermissionTest.class.getName());
+    @Test
+    public void testPermissions() {
+        LOG.log(System.Logger.Level.INFO, "----------------- testPermissions --------------------");
+        byte permissionsNo = (byte) 0x00;
+        Assert.assertTrue(DataPermission.readPermissions(permissionsNo).isEmpty());
+        byte permissionsAll = (byte) 0xf0;
+        Assert.assertEquals(4, DataPermission.readPermissions(permissionsAll).size());
     }
 }

@@ -7,12 +7,16 @@
 module ss.rbac {
     requires java.persistence;
     requires java.validation;
+    requires java.logging;
     
     exports org.ss.rbac.entity;
     exports org.ss.rbac.api;
+    exports org.ss.rbac.constant;
     
     opens org.ss.rbac.entity;
     
     uses org.ss.rbac.api.UserProvider;
     uses org.ss.rbac.api.EntityManagerProvider;
+    
+    provides java.lang.System.LoggerFinder with org.ss.rbac.api.RbacLoggerFinder;
 }

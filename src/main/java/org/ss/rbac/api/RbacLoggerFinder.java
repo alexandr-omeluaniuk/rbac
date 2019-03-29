@@ -23,34 +23,15 @@
  */
 package org.ss.rbac.api;
 
-import java.util.Date;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import org.ss.rbac.entity.Audit;
+import org.ss.rbac.internal.api.RbacLogger;
 
 /**
- * Audit entity listener.
+ * Library module finder.
  * @author ss
  */
-public class AuditingEntityListener {
-    /** User service. */
-    private final UserProvider userProvider = ServiceProvider.load(UserProvider.class);
-    /**
-     * Handle pre persist operations.
-     * @param auditable auditable entity.
-     */
-    @PrePersist
-    public void prePersist(Audit auditable) {
-        auditable.setCreatedBy(userProvider.getCurrentUser());
-        auditable.setCreatedDate(new Date());
-    }
-    /**
-     * Handle pre update operations.
-     * @param auditable auditable entity.
-     */
-    @PreUpdate
-    public void preUpdate(Audit auditable) {
-        auditable.setLastModifiedBy(userProvider.getCurrentUser());
-        auditable.setLastModifiedDate(new Date());
+public class RbacLoggerFinder extends System.LoggerFinder {
+    @Override
+    public System.Logger getLogger(String name, Module module) {
+        return new RbacLogger(name);
     }
 }

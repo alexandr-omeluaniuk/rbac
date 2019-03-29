@@ -21,36 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.api;
+package org.ss.rbac.internal.api;
 
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import org.ss.rbac.entity.Audit;
+import java.util.ResourceBundle;
 
 /**
- * Audit entity listener.
+ * Library logger implementation.
  * @author ss
  */
-public class AuditingEntityListener {
-    /** User service. */
-    private final UserProvider userProvider = ServiceProvider.load(UserProvider.class);
+public class RbacLogger implements System.Logger {
+    /** Logger name. */
+    private final String loggerName;
     /**
-     * Handle pre persist operations.
-     * @param auditable auditable entity.
+     * Constructor.
+     * @param name logger name.
      */
-    @PrePersist
-    public void prePersist(Audit auditable) {
-        auditable.setCreatedBy(userProvider.getCurrentUser());
-        auditable.setCreatedDate(new Date());
+    public RbacLogger(String name) {
+        loggerName = name;
     }
-    /**
-     * Handle pre update operations.
-     * @param auditable auditable entity.
-     */
-    @PreUpdate
-    public void preUpdate(Audit auditable) {
-        auditable.setLastModifiedBy(userProvider.getCurrentUser());
-        auditable.setLastModifiedDate(new Date());
+    @Override
+    public String getName() {
+        return "RBAC";
+    }
+    @Override
+    public boolean isLoggable(Level level) {
+        return true;
+    }
+    @Override
+    public void log(Level level, ResourceBundle bundle, String msg, Throwable thrown) {
+        System.out.printf("[" + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date())
+                + "] [%s] [%s] %s - %s%n", level, loggerName, msg, thrown);
+    }
+    @Override
+    public void log(Level level, ResourceBundle bundle, String format, Object... params) {
+        System.out.printf("[" + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date())
+                + "] [%s] [%s] %s%n", level, loggerName, MessageFormat.format(format, params));
     }
 }

@@ -13,13 +13,20 @@ import org.ss.rbac.api.ServiceProvider;
 import org.ss.rbac.test.entity.Product;
 
 /**
- *
+ * Unit test.
+ * @see org.ss.rbac.api.AuditingEntityListener
  * @author ss
  */
-public class AuditingEntityListenerTest extends AbstractTest {
-    private final EntityManagerProvider emProvider = ServiceProvider.load(EntityManagerProvider.class);
+public class AuditingEntityListenerTest extends DatabaseTest {
+    /** Logger. */
+    private static final System.Logger LOG =
+            System.getLogger(AuditingEntityListenerTest.class.getName());
+    /** Entity manager provider. */
+    private final EntityManagerProvider emProvider =
+            ServiceProvider.load(EntityManagerProvider.class);
     @Test
     public void testAuditing() throws Exception {
+        LOG.log(System.Logger.Level.INFO, "----------------- testAuditing -----------------------");
         Product product = new Product();
         product.setName("Soap");
         EntityManager em = emProvider.getEntityManager();
