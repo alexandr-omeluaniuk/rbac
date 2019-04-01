@@ -21,13 +21,6 @@
             <artifactId>javax.persistence-api</artifactId>
             <version>2.2</version>
         </dependency>
-        <!-- PROVIDED -->
-        <!--dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-jpamodelgen</artifactId>
-            <version>5.4.1.Final</version>
-            <scope>provided</scope>
-        </dependency-->
         <!-- TEST -->
         <dependency>
             <groupId>junit</groupId>
@@ -71,6 +64,13 @@
                 <version>3.8.0</version>
                 <configuration>
                     <release>11</release>
+                    <!--annotationProcessorPaths>
+                        <path>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-jpamodelgen</artifactId>
+                            <version>5.4.1.Final</version>
+                        </path>
+                    </annotationProcessorPaths-->
                 </configuration>
             </plugin>
             <plugin>

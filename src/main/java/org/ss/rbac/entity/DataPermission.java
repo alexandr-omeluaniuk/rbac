@@ -50,15 +50,15 @@ public class DataPermission implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    /** Security principal. */
+    /** Principal type. */
     @NotNull
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "sid_principal", nullable = false)
-    private PrincipalType sidPrincipal;
-    /** SID. */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "principal_type", nullable = false)
+    private PrincipalType principalType;
+    /** Principal ID. */
     @NotNull
-    @Column(name = "sid_id", nullable = false)
-    private Long sidIdentity;
+    @Column(name = "principal_id", nullable = false)
+    private Long principalId;
     /** Entity class name. */
     @NotNull
     @Size(max = 255)
@@ -80,30 +80,6 @@ public class DataPermission implements Serializable {
      */
     public void setId(Long id) {
         this.id = id;
-    }
-    /**
-     * @return the sidPrincipal
-     */
-    public PrincipalType getSidPrincipal() {
-        return sidPrincipal;
-    }
-    /**
-     * @param sidPrincipal the sidPrincipal to set
-     */
-    public void setSidPrincipal(PrincipalType sidPrincipal) {
-        this.sidPrincipal = sidPrincipal;
-    }
-    /**
-     * @return the sidIdentity
-     */
-    public Long getSidIdentity() {
-        return sidIdentity;
-    }
-    /**
-     * @param sidIdentity the sidIdentity to set
-     */
-    public void setSidIdentity(Long sidIdentity) {
-        this.sidIdentity = sidIdentity;
     }
     /**
      * @return the entity
@@ -128,6 +104,30 @@ public class DataPermission implements Serializable {
      */
     public void setPermissions(byte permissions) {
         this.permissions = permissions;
+    }
+    /**
+     * @return the principalType
+     */
+    public PrincipalType getPrincipalType() {
+        return principalType;
+    }
+    /**
+     * @param principalType the principalType to set
+     */
+    public void setPrincipalType(PrincipalType principalType) {
+        this.principalType = principalType;
+    }
+    /**
+     * @return the principalId
+     */
+    public Long getPrincipalId() {
+        return principalId;
+    }
+    /**
+     * @param principalId the principalId to set
+     */
+    public void setPrincipalId(Long principalId) {
+        this.principalId = principalId;
     }
 // ================================================================================================
     @Override

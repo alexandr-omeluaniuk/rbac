@@ -28,7 +28,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import org.ss.rbac.configuration.UserProvider;
 import org.ss.rbac.entity.Audit;
-import org.ss.rbac.internal.api.ServiceProvider;
 
 /**
  * Audit entity listener.

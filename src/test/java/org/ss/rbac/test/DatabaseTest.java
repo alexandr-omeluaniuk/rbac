@@ -25,16 +25,20 @@ package org.ss.rbac.test;
 
 import javax.persistence.EntityManager;
 import org.junit.BeforeClass;
+import org.ss.rbac.api.ServiceProvider;
 import org.ss.rbac.configuration.EntityManagerProvider;
+import org.ss.rbac.configuration.UserProvider;
 import org.ss.rbac.entity.User;
 import org.ss.rbac.test.api.impl.EntityManagerProviderImpl;
 import org.ss.rbac.test.api.impl.UserProviderImpl;
 
 /**
- *
+ * Abstract test with database access.
  * @author ss
  */
 public abstract class DatabaseTest {
+    /** User provider. */
+    protected UserProvider userProvider = ServiceProvider.load(UserProvider.class);
     @BeforeClass
     public static void before() {
         User user = new User();

@@ -21,40 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.ss.rbac.internal.api.impl;
 
-module ss.rbac.test {
-    requires ss.rbac;
-    requires com.h2database;
-    requires org.hibernate.orm.core;
-    requires org.hibernate.validator;
-    requires junit;
-    requires com.sun.xml.fastinfoset;
-    requires antlr;
-    requires net.bytebuddy;
-    requires com.fasterxml.classmate;
-    requires dom4j;
-    requires hamcrest.core;
-    requires org.hibernate.commons.annotations;
-    requires com.sun.istack.runtime;
-    requires jandex;
-    requires javassist;
-    requires java.activation;
-    requires java.xml.bind;
-    requires com.sun.xml.bind;
-    requires org.jboss.logging;
-    requires java.transaction;
-    requires org.jvnet.staxex;
-    requires com.sun.xml.txw2;
-    
-    exports org.ss.rbac.test;
-    
-    opens org.ss.rbac.test.entity;
-    
-    uses org.ss.rbac.configuration.EntityManagerProvider;
-    uses org.ss.rbac.api.PermissionService;
-    
-    provides org.ss.rbac.configuration.UserProvider 
-            with org.ss.rbac.test.api.impl.UserProviderImpl;
-    provides org.ss.rbac.configuration.EntityManagerProvider 
-            with org.ss.rbac.test.api.impl.EntityManagerProviderImpl;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import org.ss.rbac.configuration.EntityManagerProvider;
+import org.ss.rbac.internal.api.CoreDAO;
+import org.ss.rbac.api.ServiceProvider;
+
+/**
+ * Core DAO implementation.
+ * @author ss
+ */
+public class CoreDAOImpl implements CoreDAO {
+    /** Entity manager provider. */
+    private final EntityManagerProvider emProvider = ServiceProvider.load(
+            EntityManagerProvider.class);
+    @Override
+    public <T> T create(T entity) {
+        EntityManager em = emProvider.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        em.persist(entity);
+        tx.commit();
+        return entity;
+    }
+    @Override
+    public <T> T update(T entity) {
+        EntityManager em = emProvider.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        em.merge(entity);
+        tx.commit();
+        return entity;
+    }
 }

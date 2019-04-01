@@ -25,21 +25,21 @@ package org.ss.rbac.test;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.ss.rbac.constant.DataPermission;
+import org.ss.rbac.constant.PermissionOperation;
 
 /**
- *
+ * @see org.ss.rbac.constant.PermissionOperation
  * @author ss
  */
-public class DataPermissionTest {
+public class PermissionOperationTest {
     /** Logger. */
-    private static final System.Logger LOG = System.getLogger(DataPermissionTest.class.getName());
+    private static final System.Logger LOG = System.getLogger(PermissionOperationTest.class.getName());
     @Test
     public void testPermissions() {
         LOG.log(System.Logger.Level.INFO, "----------------- testPermissions --------------------");
         byte permissionsNo = (byte) 0x00;
-        Assert.assertTrue(DataPermission.readPermissions(permissionsNo).isEmpty());
+        Assert.assertTrue(PermissionOperation.readPermissions(permissionsNo).isEmpty());
         byte permissionsAll = (byte) 0xf0;
-        Assert.assertEquals(4, DataPermission.readPermissions(permissionsAll).size());
+        Assert.assertEquals(4, PermissionOperation.readPermissions(permissionsAll).size());
     }
 }

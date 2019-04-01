@@ -18,6 +18,16 @@ module ss.rbac {
     
     uses org.ss.rbac.configuration.UserProvider;
     uses org.ss.rbac.configuration.EntityManagerProvider;
+    uses org.ss.rbac.internal.api.DataPermissionDAO;
+    uses org.ss.rbac.api.PermissionService;
+    uses org.ss.rbac.internal.api.CoreDAO;
     
-    provides java.lang.System.LoggerFinder with org.ss.rbac.internal.api.RbacLoggerFinder;
+    provides java.lang.System.LoggerFinder 
+            with org.ss.rbac.internal.api.RbacLoggerFinder;
+    provides org.ss.rbac.internal.api.DataPermissionDAO 
+            with org.ss.rbac.internal.api.impl.DataPermissionDAOImpl;
+    provides org.ss.rbac.api.PermissionService 
+            with org.ss.rbac.internal.api.impl.RbacPermissionServiceImpl;
+    provides org.ss.rbac.internal.api.CoreDAO 
+            with org.ss.rbac.internal.api.impl.CoreDAOImpl;
 }

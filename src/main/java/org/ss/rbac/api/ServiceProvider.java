@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.internal.api;
+package org.ss.rbac.api;
 
 import java.util.Iterator;
 import java.util.ServiceLoader;
@@ -44,6 +44,7 @@ public class ServiceProvider {
         while (itr.hasNext()) {
             return itr.next();
         }
-        throw new ServiceNotFoundException("Service not found: " + clazz.getName());
+        throw new ServiceNotFoundException(
+                "Service implementation is not found for: " + clazz.getName());
     }
 }

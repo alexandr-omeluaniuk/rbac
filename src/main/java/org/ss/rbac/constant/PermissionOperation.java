@@ -30,7 +30,7 @@ import java.util.Set;
  * Data permission.
  * @author ss
  */
-public enum DataPermission {
+public enum PermissionOperation {
     /** Read data. */
     READ((byte) 0x80),
     /** Create. */
@@ -45,7 +45,7 @@ public enum DataPermission {
      * Constructor.
      * @param code permission code.
      */
-    private DataPermission(byte code) {
+    private PermissionOperation(byte code) {
         this.code = code;
     }
     /**
@@ -60,9 +60,9 @@ public enum DataPermission {
      * @param permissions raw byte data.
      * @return set of permission constants.
      */
-    public static Set<DataPermission> readPermissions(byte permissions) {
-        Set<DataPermission> result = new HashSet<>();
-        for (DataPermission permission : DataPermission.values()) {
+    public static Set<PermissionOperation> readPermissions(byte permissions) {
+        Set<PermissionOperation> result = new HashSet<>();
+        for (PermissionOperation permission : PermissionOperation.values()) {
             byte masked = (byte) (permissions & permission.getCode());
             if (masked == permission.getCode()) {
                 result.add(permission);

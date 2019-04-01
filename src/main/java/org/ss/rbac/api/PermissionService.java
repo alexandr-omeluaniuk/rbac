@@ -21,40 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.ss.rbac.api;
 
-module ss.rbac.test {
-    requires ss.rbac;
-    requires com.h2database;
-    requires org.hibernate.orm.core;
-    requires org.hibernate.validator;
-    requires junit;
-    requires com.sun.xml.fastinfoset;
-    requires antlr;
-    requires net.bytebuddy;
-    requires com.fasterxml.classmate;
-    requires dom4j;
-    requires hamcrest.core;
-    requires org.hibernate.commons.annotations;
-    requires com.sun.istack.runtime;
-    requires jandex;
-    requires javassist;
-    requires java.activation;
-    requires java.xml.bind;
-    requires com.sun.xml.bind;
-    requires org.jboss.logging;
-    requires java.transaction;
-    requires org.jvnet.staxex;
-    requires com.sun.xml.txw2;
-    
-    exports org.ss.rbac.test;
-    
-    opens org.ss.rbac.test.entity;
-    
-    uses org.ss.rbac.configuration.EntityManagerProvider;
-    uses org.ss.rbac.api.PermissionService;
-    
-    provides org.ss.rbac.configuration.UserProvider 
-            with org.ss.rbac.test.api.impl.UserProviderImpl;
-    provides org.ss.rbac.configuration.EntityManagerProvider 
-            with org.ss.rbac.test.api.impl.EntityManagerProviderImpl;
+import java.util.Set;
+import org.ss.rbac.constant.PermissionOperation;
+import org.ss.rbac.constant.PrincipalType;
+import org.ss.rbac.entity.Audit;
+
+/**
+ * RBAC permission service.
+ * @author ss
+ */
+public interface PermissionService {
+    /**
+     * Set permissions for data.
+     * @param permissions permitted operations.
+     * @param principalType principal type.
+     * @param principalId principal identity.
+     * @param entityClass applied for data.
+     */
+    void setDataPermissions(Set<PermissionOperation> permissions, PrincipalType principalType,
+            Long principalId, Class<? extends Audit> entityClass);
+    /**
+     * Get data permissions.
+     * @param principalType principal type.
+     * @param principalId principal identity.
+     * @param entityClass data entity class.
+     * @return permitted operations.
+     */
+    Set<PermissionOperation> getDataPermissions(PrincipalType principalType,
+            Long principalId, Class<? extends Audit> entityClass);
 }

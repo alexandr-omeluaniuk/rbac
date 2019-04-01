@@ -23,24 +23,23 @@
  */
 package org.ss.rbac.internal.api;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import org.ss.rbac.configuration.EntityManagerProvider;
-
 /**
- *
+ * Core DAO.
  * @author ss
  */
-public class CoreDAO {
-    /** Entity manager provider. */
-    private final EntityManagerProvider emProvider = ServiceProvider.load(
-            EntityManagerProvider.class);
-    public <T> T create(T entity) {
-        EntityManager em = emProvider.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
-        em.persist(entity);
-        tx.commit();
-        return entity;
-    }
+public interface CoreDAO {
+    /**
+     * Create entity.
+     * @param <T> entity type.
+     * @param entity entity.
+     * @return entity with an assigned ID.
+     */
+    <T> T create(T entity);
+    /**
+     * Update entity.
+     * @param <T> entity type.
+     * @param entity entity.
+     * @return updated entity.
+     */
+    <T> T update(T entity);
 }
