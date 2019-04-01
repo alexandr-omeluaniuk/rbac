@@ -32,7 +32,7 @@ import org.ss.rbac.configuration.UserProvider;
 import org.ss.rbac.entity.Audit;
 
 /**
- * Inserted and updated audit information for auditable entity.
+ * Inserts and updates audit information for auditable entity.
  * @author ss
  */
 public class AuditingEntityListener {
