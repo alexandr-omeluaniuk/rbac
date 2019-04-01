@@ -55,6 +55,7 @@ public class Product extends Audit implements Serializable {
     /**
      * @return the id
      */
+    @Override
     public Long getId() {
         return id;
     }

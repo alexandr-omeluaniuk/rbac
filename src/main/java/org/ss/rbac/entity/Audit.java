@@ -25,14 +25,15 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import org.ss.rbac.api.AuditingEntityListener;
+import org.ss.rbac.listener.AuditingEntityListener;
+import org.ss.rbac.listener.DataSecurityListener;
 
 /**
  * Auditing superclass.
  * @author Alexandr Omeluaniuk
  */
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners({ AuditingEntityListener.class, DataSecurityListener.class })
 public abstract class Audit {
 // ================================== FIELDS ======================================================
     /** Created by. */
@@ -52,6 +53,10 @@ public abstract class Audit {
     @Column(name = "last_modified_date")
     private Date lastModifiedDate;
 // ================================= SET & GET ====================================================
+    /**
+     * @return the id
+     */
+    public abstract Long getId();
     /**
      * @return the createdBy
      */

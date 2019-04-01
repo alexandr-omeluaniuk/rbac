@@ -21,37 +21,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.api;
+package org.ss.rbac.listener;
 
+import java.lang.System.Logger.Level;
 import java.util.Date;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import org.ss.rbac.api.ServiceProvider;
 import org.ss.rbac.configuration.UserProvider;
 import org.ss.rbac.entity.Audit;
 
 /**
- * Audit entity listener.
+ * Inserted and updated audit information for auditable entity.
  * @author ss
  */
 public class AuditingEntityListener {
+    /** Logger. */
+    private static final System.Logger LOG =
+            System.getLogger(AuditingEntityListener.class.getName());
     /** User service. */
     private final UserProvider userProvider = ServiceProvider.load(UserProvider.class);
     /**
-     * Handle pre persist operations.
+     * Handle entity before persist.
      * @param auditable auditable entity.
      */
     @PrePersist
     public void prePersist(Audit auditable) {
         auditable.setCreatedBy(userProvider.getCurrentUser());
         auditable.setCreatedDate(new Date());
+        if (LOG.isLoggable(Level.TRACE)) {
+            LOG.log(Level.TRACE, "pre persist " + auditable);
+            LOG.log(Level.TRACE, "pre persist, created by {0}",
+                    new Object[] {auditable.getCreatedBy()});
+        }
     }
     /**
-     * Handle pre update operations.
+     * Handle entity before update operation.
      * @param auditable auditable entity.
      */
     @PreUpdate
     public void preUpdate(Audit auditable) {
         auditable.setLastModifiedBy(userProvider.getCurrentUser());
         auditable.setLastModifiedDate(new Date());
+        if (LOG.isLoggable(Level.TRACE)) {
+            LOG.log(Level.TRACE, "pre update " + auditable);
+            LOG.log(Level.TRACE, "pre persist, modified by {0}",
+                    new Object[] {auditable.getLastModifiedBy()});
+        }
     }
 }
