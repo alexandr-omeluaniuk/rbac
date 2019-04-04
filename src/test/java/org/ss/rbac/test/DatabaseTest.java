@@ -23,9 +23,15 @@
  */
 package org.ss.rbac.test;
 
+import java.lang.System.Logger.Level;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.Root;
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.ss.rbac.api.PermissionService;
 import org.ss.rbac.api.ServiceProvider;
@@ -34,15 +40,21 @@ import org.ss.rbac.configuration.UserProvider;
 import org.ss.rbac.constant.PermissionOperation;
 import org.ss.rbac.constant.PrincipalType;
 import org.ss.rbac.entity.Audit;
+import org.ss.rbac.entity.DataPermission;
 import org.ss.rbac.entity.User;
-import org.ss.rbac.test.api.impl.EntityManagerProviderImpl;
 import org.ss.rbac.test.api.impl.UserProviderImpl;
+import org.ss.rbac.test.entity.Product;
 
 /**
  * Abstract test with database access.
  * @author ss
  */
 public abstract class DatabaseTest {
+    /** Logger. */
+    private static final System.Logger LOG = System.getLogger(DatabaseTest.class.getName());
+    /** Entity manager provider. */
+    private static final EntityManagerProvider emProvider =
+            ServiceProvider.load(EntityManagerProvider.class);
     /** User provider. */
     protected UserProvider userProvider = ServiceProvider.load(UserProvider.class);
     /** Permission service. */
@@ -57,12 +69,29 @@ public abstract class DatabaseTest {
         user.setPassword("paSSword");
         user.setUsername("gareth.richardson@test.com");
         user.setRoles(new HashSet<>());
-        EntityManagerProvider emProvider = new EntityManagerProviderImpl();
         EntityManager em = emProvider.getEntityManager();
         em.getTransaction().begin();
         em.persist(user);
         em.getTransaction().commit();
         UserProviderImpl.auth(user);
+    }
+    @After
+    public void clearDatabase() {
+        LOG.log(Level.DEBUG, ">> clear database after test");
+        EntityManager em = emProvider.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        Class[] classes = new Class[] { Product.class, DataPermission.class };
+        for (Class cl : classes) {
+            LOG.log(Level.DEBUG, "> handle class [{0}]", cl.getName());
+            CriteriaBuilder cb  = em.getCriteriaBuilder();
+            CriteriaDelete query = cb.createCriteriaDelete(cl);
+            Root root = query.from(cl);
+            query.where(cb.isNotNull(root.get("id")));
+            em.createQuery(query).executeUpdate();
+        }
+        tx.commit();
+        LOG.log(Level.DEBUG, ">> clear database completed");
     }
     protected void setAllPermissionsForCurrentUser(Class<? extends Audit> entityClass) {
         Set<PermissionOperation> permissions = new HashSet<>();
