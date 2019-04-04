@@ -47,6 +47,7 @@ public class AuditingEntityListener {
      */
     @PrePersist
     public void prePersist(Audit auditable) {
+        auditable.setOwner(userProvider.getCurrentUser());
         auditable.setCreatedBy(userProvider.getCurrentUser());
         auditable.setCreatedDate(new Date());
         if (LOG.isLoggable(Level.TRACE)) {

@@ -23,9 +23,11 @@
  */
 package org.ss.rbac.internal.api;
 
+import java.util.List;
 import org.ss.rbac.constant.PrincipalType;
 import org.ss.rbac.entity.Audit;
 import org.ss.rbac.entity.DataPermission;
+import org.ss.rbac.entity.User;
 
 /**
  * Data permission DAO.
@@ -41,4 +43,11 @@ public interface DataPermissionDAO {
      */
     DataPermission getDataPermission(PrincipalType principalType, Long principalId,
             Class<? extends Audit> entityClass);
+    /**
+     * Get user permissions.
+     * @param user user.
+     * @param entityClass data entity class.
+     * @return data permissions.
+     */
+    List<DataPermission> getUserPermission(User user, Class<? extends Audit> entityClass);
 }

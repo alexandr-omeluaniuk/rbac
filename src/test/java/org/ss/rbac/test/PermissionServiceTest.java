@@ -27,8 +27,6 @@ import java.util.HashSet;
 import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
-import org.ss.rbac.api.PermissionService;
-import org.ss.rbac.api.ServiceProvider;
 import org.ss.rbac.constant.PermissionOperation;
 import org.ss.rbac.constant.PrincipalType;
 import org.ss.rbac.entity.User;
@@ -42,8 +40,6 @@ public class PermissionServiceTest extends DatabaseTest {
     /** Logger. */
     private static final System.Logger LOG =
             System.getLogger(PermissionServiceTest.class.getName());
-    /** Service. */
-    private final PermissionService service = ServiceProvider.load(PermissionService.class);
     @Test
     public void testSetDataPermissions() {
         LOG.log(System.Logger.Level.INFO, "----------------- setDataPermissions -----------------");
@@ -52,9 +48,9 @@ public class PermissionServiceTest extends DatabaseTest {
         Set<PermissionOperation> permissions = new HashSet<>();
         permissions.add(PermissionOperation.READ);
         permissions.add(PermissionOperation.DELETE);
-        service.setDataPermissions(permissions, principalType, user.getId(), Product.class);
+        permissionService.setDataPermissions(permissions, principalType, user.getId(), Product.class);
         LOG.log(System.Logger.Level.INFO, "----------------- getDataPermissions -----------------");
-        Set<PermissionOperation> productPermissions = service.getDataPermissions(
+        Set<PermissionOperation> productPermissions = permissionService.getDataPermissions(
                 principalType, user.getId(), Product.class);
         Assert.assertEquals(2, productPermissions.size());
         boolean isRead = false, isDelete = false, isCreate = false, isUpdate = false;

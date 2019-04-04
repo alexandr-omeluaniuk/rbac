@@ -21,22 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.test.api.impl;
+package org.ss.rbac.exception;
 
-import org.ss.rbac.configuration.UserProvider;
-import org.ss.rbac.entity.User;
+import org.ss.rbac.constant.PermissionOperation;
 
 /**
- *
+ * No permission error.
  * @author ss
  */
-public class UserProviderImpl implements UserProvider {
-    private static User user;
-    public static void auth(User u) {
-        user = u;
-    }
-    @Override
-    public User getCurrentUser() {
-        return user;
+public class NoPermissionException extends Exception {
+    /** Permission operation. */
+    private final PermissionOperation operation;
+    /**
+     * Constructor.
+     * @param operation permission operation. 
+     */
+    public NoPermissionException(PermissionOperation operation) {
+        super("No permission for operation: " + operation.name());
+        this.operation = operation;
     }
 }

@@ -26,6 +26,7 @@ public class AuditingEntityListenerTest extends DatabaseTest {
     @Test
     public void testAuditing() throws Exception {
         LOG.log(System.Logger.Level.INFO, "----------------- testAuditing -----------------------");
+        setAllPermissionsForCurrentUser(Product.class);
         Product product = new Product();
         product.setName("Soap");
         EntityManager em = emProvider.getEntityManager();

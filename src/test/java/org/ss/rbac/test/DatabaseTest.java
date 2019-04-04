@@ -23,11 +23,17 @@
  */
 package org.ss.rbac.test;
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.EntityManager;
 import org.junit.BeforeClass;
+import org.ss.rbac.api.PermissionService;
 import org.ss.rbac.api.ServiceProvider;
 import org.ss.rbac.configuration.EntityManagerProvider;
 import org.ss.rbac.configuration.UserProvider;
+import org.ss.rbac.constant.PermissionOperation;
+import org.ss.rbac.constant.PrincipalType;
+import org.ss.rbac.entity.Audit;
 import org.ss.rbac.entity.User;
 import org.ss.rbac.test.api.impl.EntityManagerProviderImpl;
 import org.ss.rbac.test.api.impl.UserProviderImpl;
@@ -39,6 +45,9 @@ import org.ss.rbac.test.api.impl.UserProviderImpl;
 public abstract class DatabaseTest {
     /** User provider. */
     protected UserProvider userProvider = ServiceProvider.load(UserProvider.class);
+    /** Permission service. */
+    protected final PermissionService permissionService =
+            ServiceProvider.load(PermissionService.class);
     @BeforeClass
     public static void before() {
         User user = new User();
@@ -47,11 +56,21 @@ public abstract class DatabaseTest {
         user.setLastname("Richardson");
         user.setPassword("paSSword");
         user.setUsername("gareth.richardson@test.com");
+        user.setRoles(new HashSet<>());
         EntityManagerProvider emProvider = new EntityManagerProviderImpl();
         EntityManager em = emProvider.getEntityManager();
         em.getTransaction().begin();
         em.persist(user);
         em.getTransaction().commit();
         UserProviderImpl.auth(user);
+    }
+    protected void setAllPermissionsForCurrentUser(Class<? extends Audit> entityClass) {
+        Set<PermissionOperation> permissions = new HashSet<>();
+        permissions.add(PermissionOperation.READ);
+        permissions.add(PermissionOperation.DELETE);
+        permissions.add(PermissionOperation.UPDATE);
+        permissions.add(PermissionOperation.CREATE);
+        permissionService.setDataPermissions(permissions, PrincipalType.USER,
+                userProvider.getCurrentUser().getId(), entityClass);
     }
 }

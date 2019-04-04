@@ -23,10 +23,12 @@
  */
 package org.ss.rbac.internal.api.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.ss.rbac.configuration.EntityManagerProvider;
 import org.ss.rbac.constant.PrincipalType;
@@ -34,6 +36,7 @@ import org.ss.rbac.entity.Audit;
 import org.ss.rbac.entity.DataPermission;
 import org.ss.rbac.internal.api.DataPermissionDAO;
 import org.ss.rbac.api.ServiceProvider;
+import org.ss.rbac.entity.User;
 
 /**
  * Data permission DAO implementation.
@@ -57,5 +60,30 @@ public class DataPermissionDAOImpl implements DataPermissionDAO {
         );
         List<DataPermission> result = em.createQuery(criteria).getResultList();
         return result.isEmpty() ? null : result.get(0);
+    }
+    @Override
+    public List<DataPermission> getUserPermission(User user, Class<? extends Audit> entityClass) {
+        EntityManager em = emProvider.getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<DataPermission> criteria = cb.createQuery(DataPermission.class);
+        Root<DataPermission> c = criteria.from(DataPermission.class);
+        List<Predicate> criterias = new ArrayList<>();
+        criterias.add(cb.equal(c.get("entity"), entityClass.getName()));
+        List<Predicate> orCriterias = new ArrayList<>();
+        user.getRoles().forEach((role) -> {
+            orCriterias.add(cb.and(
+                    cb.equal(c.get("principalId"), role.getId()),
+                    cb.equal(c.get("principalType"), PrincipalType.ROLE)
+            ));
+        });
+        orCriterias.add(cb.and(
+                cb.equal(c.get("principalId"), user.getId()),
+                cb.equal(c.get("principalType"), PrincipalType.USER)
+        ));
+        criterias.add(cb.or(
+                orCriterias.toArray(new Predicate[0])
+        ));
+        criteria.select(c).where(criterias.toArray(new Predicate[0]));
+        return em.createQuery(criteria).getResultList();
     }
 }

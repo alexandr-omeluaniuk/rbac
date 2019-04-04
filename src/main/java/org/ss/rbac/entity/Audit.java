@@ -25,6 +25,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import org.ss.rbac.listener.AuditingEntityListener;
 import org.ss.rbac.listener.DataSecurityListener;
 
@@ -36,11 +37,18 @@ import org.ss.rbac.listener.DataSecurityListener;
 @EntityListeners({ AuditingEntityListener.class, DataSecurityListener.class })
 public abstract class Audit {
 // ================================== FIELDS ======================================================
+    /** Owner. */
+    @NotNull
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "owner", nullable = false)
+    private User owner;
     /** Created by. */
+    @NotNull
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "created_by", nullable = false, updatable = false)
     private User createdBy;
     /** Created date. */
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date", nullable = false, updatable = false)
     private Date createdDate;
@@ -104,5 +112,17 @@ public abstract class Audit {
      */
     public void setLastModifiedDate(Date lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
+    }
+    /**
+     * @return the owner
+     */
+    public User getOwner() {
+        return owner;
+    }
+    /**
+     * @param owner the owner to set
+     */
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 }

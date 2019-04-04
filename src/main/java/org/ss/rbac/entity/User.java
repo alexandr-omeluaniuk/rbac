@@ -6,11 +6,15 @@
 package org.ss.rbac.entity;
 
 import java.io.Serializable;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -53,6 +57,10 @@ public class User implements Serializable {
     @NotNull
     @Column(name = "active", nullable = false)
     private boolean active;
+    /** Roles. */
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "rbac_users_roles")
+    private Set<Role> roles;
 // ================================================================================================
     /**
      * @return the id
@@ -125,6 +133,18 @@ public class User implements Serializable {
      */
     public void setActive(boolean active) {
         this.active = active;
+    }
+    /**
+     * @return the roles
+     */
+    public Set<Role> getRoles() {
+        return roles;
+    }
+    /**
+     * @param roles the roles to set
+     */
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 // ================================================================================================
     @Override
