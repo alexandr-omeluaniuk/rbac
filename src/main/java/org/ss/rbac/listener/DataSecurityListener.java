@@ -50,6 +50,7 @@ public class DataSecurityListener {
             ServiceProvider.load(DataPermissionDAO.class);
     /** User service. */
     private final UserProvider userProvider = ServiceProvider.load(UserProvider.class);
+// ================================== PUBLIC ======================================================
     @PrePersist
     public void prePersist(Audit auditable) throws NoPermissionException {
         checkPermissionForOperation(auditable, PermissionOperation.CREATE);
@@ -65,20 +66,20 @@ public class DataSecurityListener {
 // ================================== PRIVATE =====================================================
     /**
      * Check if user has permission for operation.
-     * @param auditable auditable entity.
+     * @param entity auditable entity.
      * @param operation permission operation.
      * @throws NoPermissionException no permission error.
      */
-    private void checkPermissionForOperation(Audit auditable, PermissionOperation operation)
+    private void checkPermissionForOperation(Audit entity, PermissionOperation operation)
             throws NoPermissionException {
         User currentUser = userProvider.getCurrentUser();
         if (LOG.isLoggable(System.Logger.Level.TRACE)) {
-            LOG.log(System.Logger.Level.TRACE, "check permission, entity: " + auditable);
+            LOG.log(System.Logger.Level.TRACE, "check permission, entity: " + entity);
             LOG.log(System.Logger.Level.TRACE, "check permission, user: " + currentUser);
             LOG.log(System.Logger.Level.TRACE, "check permission, operation: " + operation.name());
         }
         List<DataPermission> permissions = dataPermissionDAO.getUserPermission(
-                currentUser, auditable.getClass());
+                currentUser, entity.getClass());
         for (DataPermission permission : permissions) {
             Set<PermissionOperation> operations = PermissionOperation
                     .readPermissions(permission.getPermissions());
@@ -90,6 +91,6 @@ public class DataSecurityListener {
             }
         }
         LOG.log(System.Logger.Level.INFO, "check permission, no permissions found");
-        throw new NoPermissionException(PermissionOperation.CREATE);
+        throw new NoPermissionException(PermissionOperation.CREATE, entity);
     }
 }

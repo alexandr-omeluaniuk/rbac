@@ -24,6 +24,7 @@
 package org.ss.rbac.exception;
 
 import org.ss.rbac.constant.PermissionOperation;
+import org.ss.rbac.entity.Audit;
 
 /**
  * No permission error.
@@ -34,10 +35,17 @@ public class NoPermissionException extends Exception {
     private final PermissionOperation operation;
     /**
      * Constructor.
-     * @param operation permission operation. 
+     * @param operation permission operation.
+     * @param entity entity.
      */
-    public NoPermissionException(PermissionOperation operation) {
-        super("No permission for operation: " + operation.name());
+    public NoPermissionException(PermissionOperation operation, Audit entity) {
+        super("No permission for operation: " + operation.name() + " for " + entity);
         this.operation = operation;
+    }
+    /**
+     * @return the operation
+     */
+    public PermissionOperation getOperation() {
+        return operation;
     }
 }
