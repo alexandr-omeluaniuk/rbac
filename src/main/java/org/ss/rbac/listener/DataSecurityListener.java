@@ -28,8 +28,8 @@ import java.util.Set;
 import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
-import org.ss.rbac.api.ServiceProvider;
-import org.ss.rbac.configuration.UserProvider;
+import org.ss.rbac.api.RbacApplication;
+import org.ss.rbac.internal.api.ServiceProvider;
 import org.ss.rbac.constant.PermissionOperation;
 import org.ss.rbac.entity.Audit;
 import org.ss.rbac.entity.DataPermission;
@@ -48,8 +48,6 @@ public class DataSecurityListener {
     /** Data permission DAO. */
     private final DataPermissionDAO dataPermissionDAO =
             ServiceProvider.load(DataPermissionDAO.class);
-    /** User service. */
-    private final UserProvider userProvider = ServiceProvider.load(UserProvider.class);
 // ================================== PUBLIC ======================================================
     @PrePersist
     public void prePersist(Audit auditable) throws NoPermissionException {
@@ -72,7 +70,7 @@ public class DataSecurityListener {
      */
     private void checkPermissionForOperation(Audit entity, PermissionOperation operation)
             throws NoPermissionException {
-        User currentUser = userProvider.getCurrentUser();
+        User currentUser = RbacApplication.getConfiguration().getCurrentUser();
         if (LOG.isLoggable(System.Logger.Level.TRACE)) {
             LOG.log(System.Logger.Level.TRACE, "check permission, entity: " + entity);
             LOG.log(System.Logger.Level.TRACE, "check permission, user: " + currentUser);

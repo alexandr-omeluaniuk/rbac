@@ -30,12 +30,12 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import org.ss.rbac.configuration.EntityManagerProvider;
+import org.ss.rbac.internal.api.EntityManagerProvider;
 import org.ss.rbac.constant.PrincipalType;
 import org.ss.rbac.entity.Audit;
 import org.ss.rbac.entity.DataPermission;
 import org.ss.rbac.internal.api.DataPermissionDAO;
-import org.ss.rbac.api.ServiceProvider;
+import org.ss.rbac.internal.api.ServiceProvider;
 import org.ss.rbac.entity.User;
 
 /**

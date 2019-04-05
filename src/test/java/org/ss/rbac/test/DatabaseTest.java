@@ -27,22 +27,24 @@ import java.lang.System.Logger.Level;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.Root;
 import org.junit.After;
 import org.junit.BeforeClass;
+import org.ss.rbac.api.Configuration;
 import org.ss.rbac.api.PermissionService;
-import org.ss.rbac.api.ServiceProvider;
-import org.ss.rbac.configuration.EntityManagerProvider;
-import org.ss.rbac.configuration.UserProvider;
+import org.ss.rbac.api.RbacApplication;
 import org.ss.rbac.constant.PermissionOperation;
 import org.ss.rbac.constant.PrincipalType;
 import org.ss.rbac.entity.Audit;
 import org.ss.rbac.entity.DataPermission;
 import org.ss.rbac.entity.User;
-import org.ss.rbac.test.api.impl.UserProviderImpl;
+import org.ss.rbac.test.api.impl.RbacConfigurationProvider;
+import org.ss.rbac.test.api.impl.TestServiceProvider;
 import org.ss.rbac.test.entity.Product;
 
 /**
@@ -52,16 +54,19 @@ import org.ss.rbac.test.entity.Product;
 public abstract class DatabaseTest {
     /** Logger. */
     private static final System.Logger LOG = System.getLogger(DatabaseTest.class.getName());
-    /** Entity manager provider. */
-    private static final EntityManagerProvider emProvider =
-            ServiceProvider.load(EntityManagerProvider.class);
-    /** User provider. */
-    protected UserProvider userProvider = ServiceProvider.load(UserProvider.class);
+    /** Factory. */
+    private static EntityManagerFactory emf = null;
+    /** Configuration. */
+    protected static Configuration config = new RbacConfigurationProvider();
     /** Permission service. */
     protected final PermissionService permissionService =
-            ServiceProvider.load(PermissionService.class);
+            TestServiceProvider.load(PermissionService.class);
     @BeforeClass
     public static void before() {
+        if (emf == null) {
+            emf = Persistence.createEntityManagerFactory("rbac_test");
+            RbacApplication.bootstrap(emf, config);
+        }
         User user = new User();
         user.setActive(true);
         user.setFirstname("Gareth");
@@ -69,16 +74,16 @@ public abstract class DatabaseTest {
         user.setPassword("paSSword");
         user.setUsername("gareth.richardson@test.com");
         user.setRoles(new HashSet<>());
-        EntityManager em = emProvider.getEntityManager();
+        EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         em.persist(user);
         em.getTransaction().commit();
-        UserProviderImpl.auth(user);
+        RbacConfigurationProvider.auth(user);
     }
     @After
     public void clearDatabase() {
         LOG.log(Level.DEBUG, ">> clear database after test");
-        EntityManager em = emProvider.getEntityManager();
+        EntityManager em = getEntityManager();
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         Class[] classes = new Class[] { Product.class, DataPermission.class };
@@ -100,6 +105,12 @@ public abstract class DatabaseTest {
         permissions.add(PermissionOperation.UPDATE);
         permissions.add(PermissionOperation.CREATE);
         permissionService.setDataPermissions(permissions, PrincipalType.USER,
-                userProvider.getCurrentUser().getId(), entityClass);
+                config.getCurrentUser().getId(), entityClass);
+    }
+    protected EntityManager getEntityManager() {
+        return emf.createEntityManager();
+    }
+    protected User currentUser() {
+        return config.getCurrentUser();
     }
 }

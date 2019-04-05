@@ -21,24 +21,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.test.api.impl;
+package org.ss.rbac.proxy;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import org.ss.rbac.configuration.EntityManagerProvider;
 
 /**
- *
+ * Proxy for entity manager factory.
  * @author ss
  */
-public class EntityManagerProviderImpl implements EntityManagerProvider {
-    private static EntityManagerFactory emf;
+public class EntityManagerFactoryProxy implements InvocationHandler {
+    /** Factory. */
+    private final EntityManagerFactory emf;
+    /**
+     * Private constructor.
+     * @param emf factory.
+     */
+    private EntityManagerFactoryProxy(EntityManagerFactory emf) {
+        this.emf = emf;
+    }
     @Override
-    public EntityManager getEntityManager() {
-        if (emf == null) {
-            emf = Persistence.createEntityManagerFactory("rbac_test");
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        if ("createEntityManager".equals(method.getName())) {
+            EntityManager em = (EntityManager) method.invoke(emf, args);
+            return EntityManagerProxy.proxying(em);
+        } else {
+            return method.invoke(emf, args);
         }
-        return emf.createEntityManager();
+    }
+    /**
+     * Create proxy.
+     * @param emf origin factory.
+     * @return proxy object.
+     */
+    public static synchronized EntityManagerFactory proxying(EntityManagerFactory emf) {
+        return (EntityManagerFactory) Proxy.newProxyInstance(
+                EntityManagerFactoryProxy.class.getClassLoader(),
+                new Class[] { EntityManagerFactory.class }, new EntityManagerFactoryProxy(emf));
     }
 }

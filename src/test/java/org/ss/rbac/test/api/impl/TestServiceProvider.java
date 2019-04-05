@@ -21,34 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.ss.rbac.test.api.impl;
 
-module ss.rbac.test {
-    requires ss.rbac;
-    requires com.h2database;
-    requires org.hibernate.orm.core;
-    requires org.hibernate.validator;
-    requires junit;
-    requires com.sun.xml.fastinfoset;
-    requires antlr;
-    requires net.bytebuddy;
-    requires com.fasterxml.classmate;
-    requires dom4j;
-    requires hamcrest.core;
-    requires org.hibernate.commons.annotations;
-    requires com.sun.istack.runtime;
-    requires jandex;
-    requires javassist;
-    requires java.activation;
-    requires java.xml.bind;
-    requires com.sun.xml.bind;
-    requires org.jboss.logging;
-    requires java.transaction;
-    requires org.jvnet.staxex;
-    requires com.sun.xml.txw2;
-    
-    exports org.ss.rbac.test;
-    
-    opens org.ss.rbac.test.entity;
-    
-    uses org.ss.rbac.api.PermissionService;
+import java.util.Iterator;
+import java.util.ServiceLoader;
+
+/**
+ * Service provider.
+ * @author ss
+ */
+public class TestServiceProvider {
+    /**
+     * Load service.
+     * @param <T> service type.
+     * @param clazz service class.
+     * @return service singleton.
+     */
+    public static <T> T load(Class<T> clazz) {
+        ServiceLoader<T> serviceLoader = ServiceLoader.load(clazz);
+        Iterator<T> itr = serviceLoader.iterator();
+        while (itr.hasNext()) {
+            T instance = itr.next();
+            return instance;
+        }
+        throw new NullPointerException(
+                "Test service implementation is not found for: " + clazz.getName());
+    }
 }

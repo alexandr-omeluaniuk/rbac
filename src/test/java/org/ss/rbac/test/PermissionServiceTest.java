@@ -43,7 +43,7 @@ public class PermissionServiceTest extends DatabaseTest {
     @Test
     public void testSetDataPermissions() {
         LOG.log(System.Logger.Level.INFO, "----------------- setDataPermissions -----------------");
-        User user = userProvider.getCurrentUser();
+        User user = currentUser();
         PrincipalType principalType = PrincipalType.USER;
         Set<PermissionOperation> permissions = new HashSet<>();
         permissions.add(PermissionOperation.READ);

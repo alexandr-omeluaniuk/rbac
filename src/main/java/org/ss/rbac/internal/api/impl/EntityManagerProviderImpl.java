@@ -21,22 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.test.api.impl;
+package org.ss.rbac.internal.api.impl;
 
-import org.ss.rbac.configuration.UserProvider;
-import org.ss.rbac.entity.User;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import org.ss.rbac.internal.api.EntityManagerProvider;
 
 /**
- *
+ * Entity manager provider implementation.
  * @author ss
  */
-public class UserProviderImpl implements UserProvider {
-    private static User user;
-    public static void auth(User u) {
-        user = u;
+public class EntityManagerProviderImpl implements EntityManagerProvider {
+    /** Factory. */
+    private static EntityManagerFactory factory = null;
+    @Override
+    public EntityManager getEntityManager() {
+        return factory.createEntityManager();
     }
     @Override
-    public User getCurrentUser() {
-        return user;
+    public void setEntityManagerFactory(EntityManagerFactory emf) {
+        factory = emf;
     }
 }

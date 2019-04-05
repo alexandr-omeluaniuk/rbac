@@ -27,9 +27,9 @@ import java.lang.System.Logger.Level;
 import java.util.Date;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import org.ss.rbac.api.ServiceProvider;
-import org.ss.rbac.configuration.UserProvider;
+import org.ss.rbac.api.RbacApplication;
 import org.ss.rbac.entity.Audit;
+import org.ss.rbac.entity.User;
 
 /**
  * Inserts and updates audit information for auditable entity.
@@ -39,16 +39,15 @@ public class AuditingEntityListener {
     /** Logger. */
     private static final System.Logger LOG =
             System.getLogger(AuditingEntityListener.class.getName());
-    /** User service. */
-    private final UserProvider userProvider = ServiceProvider.load(UserProvider.class);
     /**
      * Handle entity before persist.
      * @param auditable auditable entity.
      */
     @PrePersist
     public void prePersist(Audit auditable) {
-        auditable.setOwner(userProvider.getCurrentUser());
-        auditable.setCreatedBy(userProvider.getCurrentUser());
+        User user = RbacApplication.getConfiguration().getCurrentUser();
+        auditable.setOwner(user);
+        auditable.setCreatedBy(user);
         auditable.setCreatedDate(new Date());
         if (LOG.isLoggable(Level.TRACE)) {
             LOG.log(Level.TRACE, "pre persist " + auditable);
@@ -62,7 +61,8 @@ public class AuditingEntityListener {
      */
     @PreUpdate
     public void preUpdate(Audit auditable) {
-        auditable.setLastModifiedBy(userProvider.getCurrentUser());
+        User user = RbacApplication.getConfiguration().getCurrentUser();
+        auditable.setLastModifiedBy(user);
         auditable.setLastModifiedDate(new Date());
         if (LOG.isLoggable(Level.TRACE)) {
             LOG.log(Level.TRACE, "pre update " + auditable);

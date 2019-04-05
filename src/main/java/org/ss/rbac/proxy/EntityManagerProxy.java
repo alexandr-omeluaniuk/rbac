@@ -21,19 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.configuration;
+package org.ss.rbac.proxy;
 
-import org.ss.rbac.entity.User;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import javax.persistence.EntityManager;
 
 /**
- * User provider.
- * Requires external implementation.
+ * Proxy for entity manager.
  * @author ss
  */
-public interface UserProvider {
+public class EntityManagerProxy implements InvocationHandler {
+    /** Origin entity manager. */
+    private final EntityManager em;
     /**
-     * Get current user.
-     * @return current user.
+     * Private constructor.
+     * @param em entity manager.
      */
-    User getCurrentUser();
+    private EntityManagerProxy(EntityManager em) {
+        this.em = em;
+    }
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        System.out.println("METHOD: " + method.getName());
+        return method.invoke(em, args);
+    }
+    /**
+     * Create proxy for entity manager.
+     * @param origin origin entity manager.
+     * @return proxy object.
+     */
+    public static synchronized EntityManager proxying(EntityManager origin) {
+        return (EntityManager) Proxy.newProxyInstance(
+                EntityManagerProxy.class.getClassLoader(),
+                new Class[] { EntityManager.class }, new EntityManagerProxy(origin));
+    }
 }

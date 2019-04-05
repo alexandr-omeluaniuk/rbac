@@ -21,38 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.internal.api.impl;
+package org.ss.rbac.api;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
+import javax.persistence.EntityManagerFactory;
 import org.ss.rbac.internal.api.EntityManagerProvider;
-import org.ss.rbac.internal.api.CoreDAO;
 import org.ss.rbac.internal.api.ServiceProvider;
+import org.ss.rbac.proxy.EntityManagerFactoryProxy;
 
 /**
- * Core DAO implementation.
+ * Bootstrap.
  * @author ss
  */
-public class CoreDAOImpl implements CoreDAO {
+public final class RbacApplication {
     /** Entity manager provider. */
-    private final EntityManagerProvider emProvider = ServiceProvider.load(
-            EntityManagerProvider.class);
-    @Override
-    public <T> T create(T entity) {
-        EntityManager em = emProvider.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
-        em.persist(entity);
-        tx.commit();
-        return entity;
+    private static final EntityManagerProvider EM_PROVIDER =
+            ServiceProvider.load(EntityManagerProvider.class);
+    /** Configuration. */
+    private static Configuration configuration = null;
+    /**
+     * Private constructor.
+     */
+    private RbacApplication() {
     }
-    @Override
-    public <T> T update(T entity) {
-        EntityManager em = emProvider.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
-        em.merge(entity);
-        tx.commit();
-        return entity;
+    /**
+     * Bootstrap module.
+     * Proxying entity manager factory for intercept requests inside entity manager. 
+     * @param externalFactory external entity manager factory.
+     * @param config external configuration. 
+     */
+    public static synchronized void bootstrap(EntityManagerFactory externalFactory, Configuration config) {
+        configuration = config;
+        externalFactory = EntityManagerFactoryProxy.proxying(externalFactory);
+        EM_PROVIDER.setEntityManagerFactory(externalFactory);
+    }
+    /**
+     * Get external configuration.
+     * @return external configuration.
+     */
+    public static synchronized Configuration getConfiguration() {
+        return configuration;
     }
 }

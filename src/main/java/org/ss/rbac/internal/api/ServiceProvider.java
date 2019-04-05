@@ -21,11 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.api;
+package org.ss.rbac.internal.api;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.ServiceLoader;
 import org.ss.rbac.exception.ServiceNotFoundException;
 
@@ -48,20 +46,5 @@ public class ServiceProvider {
         }
         throw new ServiceNotFoundException(
                 "Service implementation is not found for: " + clazz.getName());
-    }
-    /**
-     * Get all service implementations.
-     * @param <T> service type.
-     * @param clazz service class.
-     * @return all service implementations.
-     */
-    public static <T> List<T> loadAll(Class<T> clazz) {
-        List<T> result = new ArrayList<>();
-        ServiceLoader<T> serviceLoader = ServiceLoader.load(clazz);
-        Iterator<T> itr = serviceLoader.iterator();
-        while (itr.hasNext()) {
-            result.add(itr.next());
-        }
-        return result;
     }
 }

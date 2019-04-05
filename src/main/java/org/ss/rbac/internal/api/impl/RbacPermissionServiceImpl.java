@@ -32,7 +32,7 @@ import org.ss.rbac.entity.Audit;
 import org.ss.rbac.entity.DataPermission;
 import org.ss.rbac.internal.api.CoreDAO;
 import org.ss.rbac.internal.api.DataPermissionDAO;
-import org.ss.rbac.api.ServiceProvider;
+import org.ss.rbac.internal.api.ServiceProvider;
 import org.ss.rbac.api.PermissionService;
 
 /**

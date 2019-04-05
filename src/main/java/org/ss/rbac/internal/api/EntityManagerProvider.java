@@ -21,19 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.configuration;
+package org.ss.rbac.internal.api;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 /**
  * Entity manager provider.
- * Requires external implementation.
  * @author ss
  */
 public interface EntityManagerProvider {
     /**
      * Get entity manager.
-     * @return entity manager factory.
+     * @return entity manager.
      */
     EntityManager getEntityManager();
+    /**
+     * Set entity manager factory for using in internal API.
+     * @param emf factory.
+     */
+    void setEntityManagerFactory(EntityManagerFactory emf);
 }

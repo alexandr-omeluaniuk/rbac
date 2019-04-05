@@ -21,34 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package org.ss.rbac.api;
 
-module ss.rbac.test {
-    requires ss.rbac;
-    requires com.h2database;
-    requires org.hibernate.orm.core;
-    requires org.hibernate.validator;
-    requires junit;
-    requires com.sun.xml.fastinfoset;
-    requires antlr;
-    requires net.bytebuddy;
-    requires com.fasterxml.classmate;
-    requires dom4j;
-    requires hamcrest.core;
-    requires org.hibernate.commons.annotations;
-    requires com.sun.istack.runtime;
-    requires jandex;
-    requires javassist;
-    requires java.activation;
-    requires java.xml.bind;
-    requires com.sun.xml.bind;
-    requires org.jboss.logging;
-    requires java.transaction;
-    requires org.jvnet.staxex;
-    requires com.sun.xml.txw2;
-    
-    exports org.ss.rbac.test;
-    
-    opens org.ss.rbac.test.entity;
-    
-    uses org.ss.rbac.api.PermissionService;
+import org.ss.rbac.entity.User;
+
+/**
+ * RBAC application configuration.
+ * @author ss
+ */
+public interface Configuration {
+    /**
+     * Current user provider.
+     * @return current user.
+     */
+    User getCurrentUser();
 }
