@@ -21,55 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.listener;
+package org.ss.rbac.internal.api.impl;
 
 import java.util.List;
 import java.util.Set;
-import javax.persistence.PrePersist;
-import javax.persistence.PreRemove;
-import javax.persistence.PreUpdate;
 import org.ss.rbac.api.RbacApplication;
-import org.ss.rbac.internal.api.ServiceProvider;
 import org.ss.rbac.constant.PermissionOperation;
 import org.ss.rbac.entity.Audit;
 import org.ss.rbac.entity.DataPermission;
 import org.ss.rbac.entity.User;
-import org.ss.rbac.exception.NoPermissionException;
+import org.ss.rbac.exception.OperationDeniedException;
 import org.ss.rbac.internal.api.DataPermissionDAO;
+import org.ss.rbac.internal.api.PermissionResolver;
+import org.ss.rbac.internal.api.ServiceProvider;
 
 /**
- * Performs data access checks.
+ * Permission resolver implementation.
  * @author ss
  */
-public class DataSecurityListener {
+public class PermissionResolverImpl implements PermissionResolver {
     /** Logger. */
     private static final System.Logger LOG =
-            System.getLogger(DataSecurityListener.class.getName());
+            System.getLogger(PermissionResolverImpl.class.getName());
     /** Data permission DAO. */
     private final DataPermissionDAO dataPermissionDAO =
             ServiceProvider.load(DataPermissionDAO.class);
-// ================================== PUBLIC ======================================================
-    @PrePersist
-    public void prePersist(Audit auditable) throws NoPermissionException {
-        checkPermissionForOperation(auditable, PermissionOperation.CREATE);
-    }
-    @PreUpdate
-    public void preUpdate(Audit auditable) throws NoPermissionException {
-        checkPermissionForOperation(auditable, PermissionOperation.UPDATE);
-    }
-    @PreRemove
-    public void preRemove(Audit auditable) throws NoPermissionException {
-        checkPermissionForOperation(auditable, PermissionOperation.DELETE);
-    }
-// ================================== PRIVATE =====================================================
-    /**
-     * Check if user has permission for operation.
-     * @param entity auditable entity.
-     * @param operation permission operation.
-     * @throws NoPermissionException no permission error.
-     */
-    private void checkPermissionForOperation(Audit entity, PermissionOperation operation)
-            throws NoPermissionException {
+    @Override
+    public void resolveAccessToOperation(Audit entity, PermissionOperation operation)
+            throws OperationDeniedException {
         User currentUser = RbacApplication.getConfiguration().getCurrentUser();
         if (LOG.isLoggable(System.Logger.Level.TRACE)) {
             LOG.log(System.Logger.Level.TRACE, "check permission, entity: " + entity);
@@ -89,6 +68,6 @@ public class DataSecurityListener {
             }
         }
         LOG.log(System.Logger.Level.INFO, "check permission, no permissions found");
-        throw new NoPermissionException(PermissionOperation.CREATE, entity);
+        throw new OperationDeniedException(PermissionOperation.CREATE, entity);
     }
 }

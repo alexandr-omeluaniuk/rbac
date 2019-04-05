@@ -20,6 +20,7 @@ module ss.rbac {
     uses org.ss.rbac.internal.api.EntityManagerProvider;
     uses org.ss.rbac.internal.api.DataPermissionDAO;
     uses org.ss.rbac.internal.api.CoreDAO;
+    uses org.ss.rbac.internal.api.PermissionResolver;
     
     provides org.ss.rbac.api.PermissionService 
             with org.ss.rbac.internal.api.impl.RbacPermissionServiceImpl;
@@ -31,4 +32,6 @@ module ss.rbac {
             with org.ss.rbac.internal.api.impl.CoreDAOImpl;
     provides org.ss.rbac.internal.api.EntityManagerProvider 
             with org.ss.rbac.internal.api.impl.EntityManagerProviderImpl;
+    provides org.ss.rbac.internal.api.PermissionResolver 
+            with org.ss.rbac.internal.api.impl.PermissionResolverImpl;
 }

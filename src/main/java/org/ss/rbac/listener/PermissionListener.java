@@ -21,31 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.exception;
+package org.ss.rbac.listener;
 
+import javax.persistence.PrePersist;
+import javax.persistence.PreRemove;
+import javax.persistence.PreUpdate;
+import org.ss.rbac.internal.api.ServiceProvider;
 import org.ss.rbac.constant.PermissionOperation;
 import org.ss.rbac.entity.Audit;
+import org.ss.rbac.exception.OperationDeniedException;
+import org.ss.rbac.internal.api.PermissionResolver;
 
 /**
- * No permission error.
+ * Performs data access checks.
  * @author ss
  */
-public class NoPermissionException extends Exception {
-    /** Permission operation. */
-    private final PermissionOperation operation;
-    /**
-     * Constructor.
-     * @param operation permission operation.
-     * @param entity entity.
-     */
-    public NoPermissionException(PermissionOperation operation, Audit entity) {
-        super("No permission for operation: " + operation.name() + " for " + entity);
-        this.operation = operation;
+public class PermissionListener {
+    /** Permission resolver. */
+    private final PermissionResolver permissionResolver =
+            ServiceProvider.load(PermissionResolver.class);
+// ================================== PUBLIC ======================================================
+    @PrePersist
+    public void prePersist(Audit auditable) throws OperationDeniedException {
+        permissionResolver.resolveAccessToOperation(auditable, PermissionOperation.CREATE);
     }
-    /**
-     * @return the operation
-     */
-    public PermissionOperation getOperation() {
-        return operation;
+    @PreUpdate
+    public void preUpdate(Audit auditable) throws OperationDeniedException {
+        permissionResolver.resolveAccessToOperation(auditable, PermissionOperation.UPDATE);
+    }
+    @PreRemove
+    public void preRemove(Audit auditable) throws OperationDeniedException {
+        permissionResolver.resolveAccessToOperation(auditable, PermissionOperation.DELETE);
     }
 }
