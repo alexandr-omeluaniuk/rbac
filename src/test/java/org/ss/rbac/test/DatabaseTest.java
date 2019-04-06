@@ -65,7 +65,7 @@ public abstract class DatabaseTest {
     public static void before() {
         if (emf == null) {
             emf = Persistence.createEntityManagerFactory("rbac_test");
-            RbacApplication.bootstrap(emf, config);
+            emf = RbacApplication.bootstrap(emf, config);
         }
         User user = new User();
         user.setActive(true);

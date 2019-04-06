@@ -23,9 +23,7 @@
  */
 package org.ss.rbac.proxy;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
@@ -33,33 +31,14 @@ import javax.persistence.EntityManagerFactory;
  * Proxy for entity manager factory.
  * @author ss
  */
-public class EntityManagerFactoryProxy implements InvocationHandler {
-    /** Factory. */
-    private final EntityManagerFactory emf;
-    /**
-     * Private constructor.
-     * @param emf factory.
-     */
-    private EntityManagerFactoryProxy(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
+public class EntityManagerFactoryProxy extends AbstractProxy<EntityManagerFactory> {
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    public Object doInvoke(Object proxy, Method method, Object[] args) throws Throwable {
         if ("createEntityManager".equals(method.getName())) {
-            EntityManager em = (EntityManager) method.invoke(emf, args);
-            return EntityManagerProxy.proxying(em);
+            EntityManager em = (EntityManager) method.invoke(origin, args);
+            return new EntityManagerProxy().proxying(em, EntityManager.class);
         } else {
-            return method.invoke(emf, args);
+            return method.invoke(origin, args);
         }
-    }
-    /**
-     * Create proxy.
-     * @param emf origin factory.
-     * @return proxy object.
-     */
-    public static synchronized EntityManagerFactory proxying(EntityManagerFactory emf) {
-        return (EntityManagerFactory) Proxy.newProxyInstance(
-                EntityManagerFactoryProxy.class.getClassLoader(),
-                new Class[] { EntityManagerFactory.class }, new EntityManagerFactoryProxy(emf));
     }
 }

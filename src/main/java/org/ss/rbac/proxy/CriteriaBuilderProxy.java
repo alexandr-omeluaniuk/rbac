@@ -24,27 +24,19 @@
 package org.ss.rbac.proxy;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 
 /**
- * Proxy for entity manager.
+ * Proxy for criteria builder.
  * @author ss
  */
-public class EntityManagerProxy extends AbstractProxy<EntityManager> {
+public class CriteriaBuilderProxy extends AbstractProxy<CriteriaBuilder> {
     @Override
     public Object doInvoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (method.getName().equals("getCriteriaBuilder")) {
-            CriteriaBuilder cb = (CriteriaBuilder) method.invoke(origin, args);
-            return new CriteriaBuilderProxy().proxying(cb, CriteriaBuilder.class);
-        } else if (method.getName().equals("createQuery")) {
-            for (int i = 0; i < args.length; i++) {
-                if (args[i] instanceof ProxyInternalMethods) {
-                    args[i] = ((ProxyInternalMethods)Proxy.getInvocationHandler(args[i])).getOrigin();
-                }
-            }
-            return method.invoke(origin, args);
+        if ("createCriteriaDelete".equals(method.getName())) {
+            CriteriaDelete criteria = (CriteriaDelete) method.invoke(origin, args);
+            return new CriteriaDeleteProxy().proxying(criteria, CriteriaDelete.class);
         } else {
             return method.invoke(origin, args);
         }

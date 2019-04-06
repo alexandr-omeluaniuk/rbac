@@ -23,30 +23,10 @@
  */
 package org.ss.rbac.proxy;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-
 /**
- * Proxy for entity manager.
+ *
  * @author ss
  */
-public class EntityManagerProxy extends AbstractProxy<EntityManager> {
-    @Override
-    public Object doInvoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (method.getName().equals("getCriteriaBuilder")) {
-            CriteriaBuilder cb = (CriteriaBuilder) method.invoke(origin, args);
-            return new CriteriaBuilderProxy().proxying(cb, CriteriaBuilder.class);
-        } else if (method.getName().equals("createQuery")) {
-            for (int i = 0; i < args.length; i++) {
-                if (args[i] instanceof ProxyInternalMethods) {
-                    args[i] = ((ProxyInternalMethods)Proxy.getInvocationHandler(args[i])).getOrigin();
-                }
-            }
-            return method.invoke(origin, args);
-        } else {
-            return method.invoke(origin, args);
-        }
-    }
+public interface ProxyInternalMethods {
+    Object getOrigin();
 }

@@ -48,11 +48,15 @@ public final class RbacApplication {
      * Proxying entity manager factory for intercept requests inside entity manager. 
      * @param externalFactory external entity manager factory.
      * @param config external configuration. 
+     * @return proxy for entity manager factory. 
      */
-    public static synchronized void bootstrap(EntityManagerFactory externalFactory, Configuration config) {
+    public static synchronized EntityManagerFactory bootstrap(
+            EntityManagerFactory externalFactory, Configuration config) {
         configuration = config;
-        externalFactory = EntityManagerFactoryProxy.proxying(externalFactory);
+        externalFactory = new EntityManagerFactoryProxy()
+                .proxying(externalFactory, EntityManagerFactory.class);
         EM_PROVIDER.setEntityManagerFactory(externalFactory);
+        return externalFactory;
     }
     /**
      * Get external configuration.
