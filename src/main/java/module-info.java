@@ -24,8 +24,6 @@ module ss.rbac {
     
     provides org.ss.rbac.api.PermissionService 
             with org.ss.rbac.internal.api.impl.RbacPermissionServiceImpl;
-    provides java.lang.System.LoggerFinder 
-            with org.ss.rbac.internal.api.RbacLoggerFinder;
     provides org.ss.rbac.internal.api.DataPermissionDAO 
             with org.ss.rbac.internal.api.impl.DataPermissionDAOImpl;
     provides org.ss.rbac.internal.api.CoreDAO 

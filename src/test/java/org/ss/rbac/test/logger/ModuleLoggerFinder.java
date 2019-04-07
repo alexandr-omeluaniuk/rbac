@@ -21,15 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.ss.rbac.internal.api;
+package org.ss.rbac.test.logger;
 
 /**
- * Library module finder.
+ * Logger finder.
  * @author ss
  */
-public class RbacLoggerFinder extends System.LoggerFinder {
+public class ModuleLoggerFinder extends System.LoggerFinder {
     @Override
     public System.Logger getLogger(String name, Module module) {
-        return new RbacLogger(name);
+        return new Log4j2SystemLogger(name);
     }
 }

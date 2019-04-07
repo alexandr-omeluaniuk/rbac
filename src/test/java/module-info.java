@@ -45,10 +45,15 @@ module ss.rbac.test {
     requires java.transaction;
     requires org.jvnet.staxex;
     requires com.sun.xml.txw2;
+    requires org.apache.logging.log4j;
+    requires org.apache.logging.log4j.core;
     
     exports org.ss.rbac.test;
     
     opens org.ss.rbac.test.entity;
     
     uses org.ss.rbac.api.PermissionService;
+    
+    provides java.lang.System.LoggerFinder 
+            with org.ss.rbac.test.logger.ModuleLoggerFinder;
 }

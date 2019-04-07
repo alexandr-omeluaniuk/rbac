@@ -48,8 +48,10 @@ public abstract class AbstractProxy<T> implements InvocationHandler, ProxyMethod
         try {
             return doInvoke(proxy, method, args);
         } catch (InvocationTargetException ex) {
+            LOG.log(Level.ERROR, "An unexpected invocation error!", ex.getTargetException());
             throw ex.getTargetException();
         } catch (Exception ex) {
+            LOG.log(Level.ERROR, "An unexpected error in proxy!", ex);
             throw ex;
         }
     }
