@@ -35,18 +35,20 @@ import javax.persistence.criteria.CriteriaBuilder;
 public class EntityManagerProxy extends AbstractProxy<EntityManager> {
     @Override
     public Object doInvoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (method.getName().equals("getCriteriaBuilder")) {
-            CriteriaBuilder cb = (CriteriaBuilder) method.invoke(origin, args);
-            return new CriteriaBuilderProxy().proxying(cb, CriteriaBuilder.class);
-        } else if (method.getName().equals("createQuery")) {
-            for (int i = 0; i < args.length; i++) {
-                if (args[i] instanceof ProxyInternalMethods) {
-                    args[i] = ((ProxyInternalMethods)Proxy.getInvocationHandler(args[i])).getOrigin();
+        switch (method.getName()) {
+            case "getCriteriaBuilder":
+                CriteriaBuilder cb = (CriteriaBuilder) method.invoke(origin, args);
+                return new CriteriaBuilderProxy().proxying(cb, CriteriaBuilder.class);
+            case "createQuery":
+                for (int i = 0; i < args.length; i++) {
+                    if (args[i] instanceof ProxyMethods) {
+                        args[i] = ((ProxyMethods)Proxy.getInvocationHandler(args[i]))
+                                .getOrigin();
+                    }
                 }
-            }
-            return method.invoke(origin, args);
-        } else {
-            return method.invoke(origin, args);
+                return method.invoke(origin, args);
+            default:
+                return method.invoke(origin, args);
         }
     }
 }

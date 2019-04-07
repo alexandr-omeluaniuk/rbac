@@ -42,6 +42,7 @@ public class PermissionServiceTest extends DatabaseTest {
             System.getLogger(PermissionServiceTest.class.getName());
     @Test
     public void testSetDataPermissions() {
+        try {
         LOG.log(System.Logger.Level.INFO, "----------------- setDataPermissions -----------------");
         User user = currentUser();
         PrincipalType principalType = PrincipalType.USER;
@@ -72,5 +73,8 @@ public class PermissionServiceTest extends DatabaseTest {
         Assert.assertTrue(isDelete);
         Assert.assertFalse(isUpdate);
         Assert.assertFalse(isCreate);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 }

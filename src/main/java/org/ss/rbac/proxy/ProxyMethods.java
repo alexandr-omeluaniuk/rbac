@@ -24,9 +24,13 @@
 package org.ss.rbac.proxy;
 
 /**
- *
+ * Methods for proxy objects.
  * @author ss
  */
-public interface ProxyInternalMethods {
+public interface ProxyMethods {
+    /**
+     * Get origin object from proxy.
+     * @return origin object.
+     */
     Object getOrigin();
 }

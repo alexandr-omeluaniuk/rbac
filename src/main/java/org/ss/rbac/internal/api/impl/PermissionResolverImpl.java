@@ -47,16 +47,18 @@ public class PermissionResolverImpl implements PermissionResolver {
     private final DataPermissionDAO dataPermissionDAO =
             ServiceProvider.load(DataPermissionDAO.class);
     @Override
-    public void resolveAccessToOperation(Audit entity, PermissionOperation operation)
-            throws OperationDeniedException {
+    public void resolveAccessToOperation(Class<? extends Audit> entityClass,
+            PermissionOperation operation) throws OperationDeniedException {
         User currentUser = RbacApplication.getConfiguration().getCurrentUser();
         if (LOG.isLoggable(System.Logger.Level.TRACE)) {
-            LOG.log(System.Logger.Level.TRACE, "check permission, entity: " + entity);
-            LOG.log(System.Logger.Level.TRACE, "check permission, user: " + currentUser);
-            LOG.log(System.Logger.Level.TRACE, "check permission, operation: " + operation.name());
+            LOG.log(System.Logger.Level.TRACE, "[resolveAccessToOperation] entity class: "
+                    + entityClass.getName());
+            LOG.log(System.Logger.Level.TRACE, "[resolveAccessToOperation] user: " + currentUser);
+            LOG.log(System.Logger.Level.TRACE, "[resolveAccessToOperation] operation: "
+                    + operation.name());
         }
         List<DataPermission> permissions = dataPermissionDAO.getUserPermission(
-                currentUser, entity.getClass());
+                currentUser, entityClass);
         for (DataPermission permission : permissions) {
             Set<PermissionOperation> operations = PermissionOperation
                     .readPermissions(permission.getPermissions());
@@ -68,6 +70,6 @@ public class PermissionResolverImpl implements PermissionResolver {
             }
         }
         LOG.log(System.Logger.Level.INFO, "check permission, no permissions found");
-        throw new OperationDeniedException(PermissionOperation.CREATE, entity);
+        throw new OperationDeniedException(operation, entityClass);
     }
 }

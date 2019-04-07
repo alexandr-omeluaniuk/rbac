@@ -25,6 +25,10 @@ package org.ss.rbac.proxy;
 
 import java.lang.reflect.Method;
 import javax.persistence.criteria.CriteriaDelete;
+import org.ss.rbac.constant.PermissionOperation;
+import org.ss.rbac.entity.Audit;
+import org.ss.rbac.internal.api.PermissionResolver;
+import org.ss.rbac.internal.api.ServiceProvider;
 
 /**
  * Proxy for CriteriaDelete.
@@ -32,8 +36,23 @@ import javax.persistence.criteria.CriteriaDelete;
  * @author ss
  */
 public class CriteriaDeleteProxy extends AbstractProxy<CriteriaDelete> {
+    /** Permission resolver. */
+    private final PermissionResolver permissionResolver =
+            ServiceProvider.load(PermissionResolver.class);
     @Override
     protected Object doInvoke(Object proxy, Method method, Object[] args) throws Throwable {
-        return method.invoke(this.origin, args);
+        switch (method.getName()) {
+            case "from":
+                if (args[0] instanceof Class) {
+                    Class entityClass = (Class) args[0];
+                    if (Audit.class.isAssignableFrom(entityClass)) {
+                        permissionResolver.resolveAccessToOperation(entityClass,
+                                PermissionOperation.DELETE);
+                    }
+                }
+                return method.invoke(this.origin, args);
+            default:
+                return method.invoke(this.origin, args);
+        }
     }
 }

@@ -34,7 +34,7 @@ import java.lang.reflect.Proxy;
  * @author ss
  * @param <T> origin object type.
  */
-public abstract class AbstractProxy<T> implements InvocationHandler, ProxyInternalMethods {
+public abstract class AbstractProxy<T> implements InvocationHandler, ProxyMethods {
     /** Logger. */
     private static final System.Logger LOG = System.getLogger(AbstractProxy.class.getName());
     /** Origin object. */
@@ -44,12 +44,13 @@ public abstract class AbstractProxy<T> implements InvocationHandler, ProxyIntern
         if (LOG.isLoggable(Level.TRACE)) {
             LOG.log(Level.TRACE, "{0} -> {1}",
                     this.origin.getClass().getSimpleName(), method.getName());
-            
         }
         try {
             return doInvoke(proxy, method, args);
         } catch (InvocationTargetException ex) {
             throw ex.getTargetException();
+        } catch (Exception ex) {
+            throw ex;
         }
     }
     /**
@@ -61,7 +62,7 @@ public abstract class AbstractProxy<T> implements InvocationHandler, ProxyIntern
     public T proxying(T origin, Class<T> cl) {
         this.origin = origin;
         return (T) Proxy.newProxyInstance(cl.getClassLoader(),
-                new Class[] { cl, ProxyInternalMethods.class }, this);
+                new Class[] { cl, ProxyMethods.class }, this);
     }
     @Override
     public Object getOrigin() {

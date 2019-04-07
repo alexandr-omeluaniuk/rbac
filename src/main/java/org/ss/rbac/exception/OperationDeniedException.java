@@ -36,10 +36,11 @@ public class OperationDeniedException extends Exception {
     /**
      * Constructor.
      * @param operation permission operation.
-     * @param entity entity.
+     * @param entityClass entity class.
      */
-    public OperationDeniedException(PermissionOperation operation, Audit entity) {
-        super("No permission for operation: " + operation.name() + " for " + entity);
+    public OperationDeniedException(PermissionOperation operation,
+            Class<? extends Audit> entityClass) {
+        super("No permission for operation: " + operation.name() + " for " + entityClass.getName());
         this.operation = operation;
     }
     /**

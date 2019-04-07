@@ -34,10 +34,10 @@ import org.ss.rbac.exception.OperationDeniedException;
 public interface PermissionResolver {
     /**
      * Resolve access to operation with data.
-     * @param entity data record.
+     * @param entityClass entity class.
      * @param operation permission operation.
      * @throws OperationDeniedException operation denied.
      */
-    void resolveAccessToOperation(Audit entity, PermissionOperation operation)
+    void resolveAccessToOperation(Class<? extends Audit> entityClass, PermissionOperation operation)
             throws OperationDeniedException;
 }

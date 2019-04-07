@@ -43,14 +43,17 @@ public class PermissionListener {
 // ================================== PUBLIC ======================================================
     @PrePersist
     public void prePersist(Audit auditable) throws OperationDeniedException {
-        permissionResolver.resolveAccessToOperation(auditable, PermissionOperation.CREATE);
+        permissionResolver.resolveAccessToOperation(auditable.getClass(),
+                PermissionOperation.CREATE);
     }
     @PreUpdate
     public void preUpdate(Audit auditable) throws OperationDeniedException {
-        permissionResolver.resolveAccessToOperation(auditable, PermissionOperation.UPDATE);
+        permissionResolver.resolveAccessToOperation(auditable.getClass(),
+                PermissionOperation.UPDATE);
     }
     @PreRemove
     public void preRemove(Audit auditable) throws OperationDeniedException {
-        permissionResolver.resolveAccessToOperation(auditable, PermissionOperation.DELETE);
+        permissionResolver.resolveAccessToOperation(auditable.getClass(),
+                PermissionOperation.DELETE);
     }
 }
