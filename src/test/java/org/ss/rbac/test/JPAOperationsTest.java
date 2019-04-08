@@ -74,21 +74,12 @@ public class JPAOperationsTest extends DatabaseTest {
     @Test
     public void testMerge() {
         LOG.log(System.Logger.Level.INFO, "----------------- testMerge --------------------------");
-        Set<PermissionOperation> permissions = new HashSet<>();
-        permissions.add(PermissionOperation.CREATE);
-        permissionService.setDataPermissions(permissions, PrincipalType.USER, currentUser().getId(),
-                Product.class);
-        Product product = new Product();
-        product.setName("Soap");
+        Product product = prepareProduct();
         EntityManager em = getEntityManager();
         EntityTransaction tx = em.getTransaction();
-        tx.begin();
-        em.persist(product);
-        tx.commit();
-        // merge without permissions
+        // without permissions
         final String name = "Apple";
         product.setName(name);
-        tx = em.getTransaction();
         try {
             tx.begin();
             em.merge(product);
@@ -99,7 +90,8 @@ public class JPAOperationsTest extends DatabaseTest {
             Assert.assertTrue("Incorrect exception!",
                     isCorrectException(ex, PermissionOperation.UPDATE));
         }
-        // merge with permissions
+        // with permissions
+        Set<PermissionOperation> permissions = new HashSet<>();
         permissions.add(PermissionOperation.UPDATE);
         permissionService.setDataPermissions(permissions, PrincipalType.USER, currentUser().getId(),
                 Product.class);
@@ -108,6 +100,39 @@ public class JPAOperationsTest extends DatabaseTest {
         em.merge(product);
         tx.commit();
         Assert.assertEquals(name, product.getName());
+    }
+    @Test
+    public void testRemove() {
+        LOG.log(System.Logger.Level.INFO, "----------------- testRemove -------------------------");
+        Product product = prepareProduct();
+        EntityManager em = getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        // without permissions
+        try {
+            tx.begin();
+            if (!em.contains(product)) {
+                product = em.find(Product.class, product.getId());
+            }
+            em.remove(product);
+            tx.commit();
+            Assert.fail("Not permitted!");
+        } catch (Exception ex) {
+            tx.rollback();
+            Assert.assertTrue("Incorrect exception!",
+                    isCorrectException(ex, PermissionOperation.DELETE));
+        }
+        // with permissions
+        Set<PermissionOperation> permissions = new HashSet<>();
+        permissions.add(PermissionOperation.DELETE);
+        permissionService.setDataPermissions(permissions, PrincipalType.USER, currentUser().getId(),
+                Product.class);
+        tx = em.getTransaction();
+        tx.begin();
+        if (!em.contains(product)) {
+            product = em.find(Product.class, product.getId());
+        }
+        em.remove(product);
+        tx.commit();
     }
 // ========================================= PRIVATE ==============================================
     private boolean isCorrectException(Throwable e, PermissionOperation operation) {
@@ -119,5 +144,19 @@ public class JPAOperationsTest extends DatabaseTest {
         } else {
             return isCorrectException(e.getCause(), operation);
         }
+    }
+    private Product prepareProduct() {
+        Set<PermissionOperation> permissions = new HashSet<>();
+        permissions.add(PermissionOperation.CREATE);
+        permissionService.setDataPermissions(permissions, PrincipalType.USER, currentUser().getId(),
+                Product.class);
+        Product product = new Product();
+        product.setName("Soap");
+        EntityManager em = getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        em.persist(product);
+        tx.commit();
+        return product;
     }
 }
