@@ -35,7 +35,7 @@ import org.ss.rbac.entity.User;
  * Inserts and updates audit information for auditable entity.
  * @author ss
  */
-public class AuditingEntityListener {
+public final class AuditingEntityListener {
     /** Logger. */
     private static final System.Logger LOG =
             System.getLogger(AuditingEntityListener.class.getName());

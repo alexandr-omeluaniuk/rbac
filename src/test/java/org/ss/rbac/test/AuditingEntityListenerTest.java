@@ -19,7 +19,6 @@ public class AuditingEntityListenerTest extends DatabaseTest {
     /** Logger. */
     private static final System.Logger LOG =
             System.getLogger(AuditingEntityListenerTest.class.getName());
-    /** Entity manager provider. */
     @Test
     public void testAuditing() {
         LOG.log(System.Logger.Level.INFO, "----------------- testAuditing -----------------------");

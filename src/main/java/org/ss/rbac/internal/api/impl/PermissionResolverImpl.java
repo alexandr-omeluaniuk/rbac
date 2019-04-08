@@ -67,7 +67,7 @@ public class PermissionResolverImpl implements PermissionResolver {
             for (DataPermission permission : permissions) {
                 Set<PermissionOperation> operations = PermissionOperation
                         .readPermissions(permission.getPermissions());
-                if (operations.contains(PermissionOperation.CREATE)) {
+                if (operations.contains(operation)) {
                     if (LOG.isLoggable(Level.TRACE)) {
                         LOG.log(Level.TRACE, "[resolveAccessToOperation] passed");
                     }

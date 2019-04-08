@@ -13,6 +13,7 @@ module ss.rbac {
     exports org.ss.rbac.api;
     exports org.ss.rbac.constant;
     exports org.ss.rbac.listener;
+    exports org.ss.rbac.exception;
     
     opens org.ss.rbac.entity;
     

@@ -48,7 +48,8 @@ public class PermissionServiceTest extends DatabaseTest {
         Set<PermissionOperation> permissions = new HashSet<>();
         permissions.add(PermissionOperation.READ);
         permissions.add(PermissionOperation.DELETE);
-        permissionService.setDataPermissions(permissions, principalType, user.getId(), Product.class);
+        permissionService.setDataPermissions(permissions, principalType, user.getId(),
+                Product.class);
         LOG.log(System.Logger.Level.INFO, "----------------- getDataPermissions -----------------");
         Set<PermissionOperation> productPermissions = permissionService.getDataPermissions(
                 principalType, user.getId(), Product.class);
