@@ -43,6 +43,13 @@ public class EntityManagerProxy extends AbstractProxy<EntityManager> {
     @Override
     public Object doInvoke(Object proxy, Method method, Object[] args) throws Throwable {
         switch (method.getName()) {
+            case "refresh":
+                Class entityClazz = args[0].getClass();
+                if (Audit.class.isAssignableFrom(entityClazz)) {
+                    permissionResolver.resolveAccessToOperation(entityClazz,
+                            PermissionOperation.READ);
+                }
+                return method.invoke(this.origin, args);
             case "find":
                 Class entityClass = (Class) args[0];
                 if (Audit.class.isAssignableFrom(entityClass)) {

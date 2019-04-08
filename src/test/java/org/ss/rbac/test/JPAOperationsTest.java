@@ -151,6 +151,28 @@ public class JPAOperationsTest extends DatabaseTest {
         product = em.find(Product.class, product.getId());
         Assert.assertNotNull(product);
     }
+    @Test
+    public void testRefresh() {
+        LOG.log(System.Logger.Level.INFO, "----------------- testRefresh ------------------------");
+        EntityManager em = getEntityManager();
+        Product product = prepareProduct(em, false);
+        // without permissions
+        product.setName(null);
+        try {
+            em.refresh(product);
+            Assert.fail("Not permitted!");
+        } catch (Exception ex) {
+            Assert.assertTrue("Incorrect exception!",
+                    isCorrectException(ex, PermissionOperation.READ));
+        }
+        // with permissions
+        Set<PermissionOperation> permissions = new HashSet<>();
+        permissions.add(PermissionOperation.READ);
+        permissionService.setDataPermissions(permissions, PrincipalType.USER, currentUser().getId(),
+                Product.class);
+        em.refresh(product);
+        Assert.assertNotNull(product.getName());
+    }
 // ========================================= PRIVATE ==============================================
     private boolean isCorrectException(Throwable e, PermissionOperation operation) {
         if (e == null) {
