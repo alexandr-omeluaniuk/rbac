@@ -74,8 +74,8 @@ public class JPAOperationsTest extends DatabaseTest {
     @Test
     public void testMerge() {
         LOG.log(System.Logger.Level.INFO, "----------------- testMerge --------------------------");
-        Product product = prepareProduct();
         EntityManager em = getEntityManager();
+        Product product = prepareProduct(em, true);
         EntityTransaction tx = em.getTransaction();
         // without permissions
         final String name = "Apple";
@@ -104,15 +104,12 @@ public class JPAOperationsTest extends DatabaseTest {
     @Test
     public void testRemove() {
         LOG.log(System.Logger.Level.INFO, "----------------- testRemove -------------------------");
-        Product product = prepareProduct();
         EntityManager em = getEntityManager();
+        Product product = prepareProduct(em, true);
         EntityTransaction tx = em.getTransaction();
         // without permissions
         try {
             tx.begin();
-            if (!em.contains(product)) {
-                product = em.find(Product.class, product.getId());
-            }
             em.remove(product);
             tx.commit();
             Assert.fail("Not permitted!");
@@ -124,15 +121,35 @@ public class JPAOperationsTest extends DatabaseTest {
         // with permissions
         Set<PermissionOperation> permissions = new HashSet<>();
         permissions.add(PermissionOperation.DELETE);
+        permissions.add(PermissionOperation.READ);
         permissionService.setDataPermissions(permissions, PrincipalType.USER, currentUser().getId(),
                 Product.class);
         tx = em.getTransaction();
         tx.begin();
-        if (!em.contains(product)) {
-            product = em.find(Product.class, product.getId());
-        }
+        product = em.find(Product.class, product.getId());
         em.remove(product);
         tx.commit();
+    }
+    @Test
+    public void testFind() {
+        LOG.log(System.Logger.Level.INFO, "----------------- testFind ---------------------------");
+        EntityManager em = getEntityManager();
+        Product product = prepareProduct(em, false);
+        // without permissions
+        try {
+            em.find(Product.class, product.getId());
+            Assert.fail("Not permitted!");
+        } catch (Exception ex) {
+            Assert.assertTrue("Incorrect exception!",
+                    isCorrectException(ex, PermissionOperation.READ));
+        }
+        // with permissions
+        Set<PermissionOperation> permissions = new HashSet<>();
+        permissions.add(PermissionOperation.READ);
+        permissionService.setDataPermissions(permissions, PrincipalType.USER, currentUser().getId(),
+                Product.class);
+        product = em.find(Product.class, product.getId());
+        Assert.assertNotNull(product);
     }
 // ========================================= PRIVATE ==============================================
     private boolean isCorrectException(Throwable e, PermissionOperation operation) {
@@ -145,14 +162,16 @@ public class JPAOperationsTest extends DatabaseTest {
             return isCorrectException(e.getCause(), operation);
         }
     }
-    private Product prepareProduct() {
+    private Product prepareProduct(EntityManager em, boolean isRead) {
         Set<PermissionOperation> permissions = new HashSet<>();
         permissions.add(PermissionOperation.CREATE);
+        if (isRead) {
+            permissions.add(PermissionOperation.READ);
+        }
         permissionService.setDataPermissions(permissions, PrincipalType.USER, currentUser().getId(),
                 Product.class);
         Product product = new Product();
         product.setName("Soap");
-        EntityManager em = getEntityManager();
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         em.persist(product);

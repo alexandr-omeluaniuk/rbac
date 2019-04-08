@@ -43,12 +43,10 @@ public class CriteriaDeleteProxy extends AbstractProxy<CriteriaDelete> {
     protected Object doInvoke(Object proxy, Method method, Object[] args) throws Throwable {
         switch (method.getName()) {
             case "from":
-                if (args[0] instanceof Class) {
-                    Class entityClass = (Class) args[0];
-                    if (Audit.class.isAssignableFrom(entityClass)) {
-                        permissionResolver.resolveAccessToOperation(entityClass,
-                                PermissionOperation.DELETE);
-                    }
+                Class entityClass = (Class) args[0];
+                if (Audit.class.isAssignableFrom(entityClass)) {
+                    permissionResolver.resolveAccessToOperation(entityClass,
+                            PermissionOperation.DELETE);
                 }
                 return method.invoke(this.origin, args);
             default:

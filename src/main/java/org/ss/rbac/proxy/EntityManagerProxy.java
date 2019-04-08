@@ -27,15 +27,29 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
+import org.ss.rbac.constant.PermissionOperation;
+import org.ss.rbac.entity.Audit;
+import org.ss.rbac.internal.api.PermissionResolver;
+import org.ss.rbac.internal.api.ServiceProvider;
 
 /**
  * Proxy for entity manager.
  * @author ss
  */
 public class EntityManagerProxy extends AbstractProxy<EntityManager> {
+    /** Permission resolver. */
+    private final PermissionResolver permissionResolver =
+            ServiceProvider.load(PermissionResolver.class);
     @Override
     public Object doInvoke(Object proxy, Method method, Object[] args) throws Throwable {
         switch (method.getName()) {
+            case "find":
+                Class entityClass = (Class) args[0];
+                if (Audit.class.isAssignableFrom(entityClass)) {
+                    permissionResolver.resolveAccessToOperation(entityClass,
+                            PermissionOperation.READ);
+                }
+                return method.invoke(this.origin, args);
             case "getCriteriaBuilder":
                 CriteriaBuilder cb = (CriteriaBuilder) method.invoke(origin, args);
                 return new CriteriaBuilderProxy().proxying(cb, CriteriaBuilder.class);

@@ -31,7 +31,7 @@ THE SOFTWARE.
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="org.ss.rbac" level="trace" additivity="false">
+        <Logger name="org.ss.rbac" level="info" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
         <Root level="info">
