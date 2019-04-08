@@ -36,7 +36,7 @@ import org.ss.rbac.internal.api.PermissionResolver;
  * Performs data access checks.
  * @author ss
  */
-public class PermissionListener {
+public class CrudOperationsListener {
     /** Permission resolver. */
     private final PermissionResolver permissionResolver =
             ServiceProvider.load(PermissionResolver.class);

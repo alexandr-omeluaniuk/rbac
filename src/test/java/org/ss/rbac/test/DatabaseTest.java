@@ -38,6 +38,8 @@ import org.junit.BeforeClass;
 import org.ss.rbac.api.Configuration;
 import org.ss.rbac.api.PermissionService;
 import org.ss.rbac.api.RbacApplication;
+import org.ss.rbac.api.WithSecurityContext;
+import org.ss.rbac.api.WithoutSecurityContext;
 import org.ss.rbac.constant.PermissionOperation;
 import org.ss.rbac.constant.PrincipalType;
 import org.ss.rbac.entity.Audit;
@@ -51,6 +53,7 @@ import org.ss.rbac.test.entity.Product;
  * Abstract test with database access.
  * @author ss
  */
+@WithSecurityContext
 public abstract class DatabaseTest {
     /** Logger. */
     private static final System.Logger LOG = System.getLogger(DatabaseTest.class.getName());
@@ -81,6 +84,7 @@ public abstract class DatabaseTest {
         RbacConfigurationProvider.auth(user);
     }
     @After
+    @WithoutSecurityContext
     public void clearDatabase() {
         LOG.log(Level.DEBUG, ">> clear database after test");
         EntityManager em = getEntityManager();
@@ -89,7 +93,7 @@ public abstract class DatabaseTest {
         Class[] classes = new Class[] { Product.class, DataPermission.class };
         for (Class cl : classes) {
             LOG.log(Level.DEBUG, "> handle class [{0}]", cl.getName());
-            CriteriaBuilder cb  = em.getCriteriaBuilder();
+            CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaDelete query = cb.createCriteriaDelete(cl);
             Root root = query.from(cl);
             query.where(cb.isNotNull(root.get("id")));

@@ -23,21 +23,18 @@
  */
 package org.ss.rbac.api;
 
-import org.ss.rbac.entity.User;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * RBAC application configuration.
+ * Enables security context for class or method.
  * @author ss
  */
-public interface Configuration {
-    /**
-     * Current user provider.
-     * @return current user.
-     */
-    User getCurrentUser();
-    /**
-     * Scan packages for annotations.
-     * @return list of packages to scan annotations.
-     */
-    String[] scanPackages();
+@Inherited
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.METHOD, ElementType.TYPE })
+public @interface WithSecurityContext {
 }

@@ -23,21 +23,16 @@
  */
 package org.ss.rbac.api;
 
-import org.ss.rbac.entity.User;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * RBAC application configuration.
+ * Exclude from security context.
  * @author ss
  */
-public interface Configuration {
-    /**
-     * Current user provider.
-     * @return current user.
-     */
-    User getCurrentUser();
-    /**
-     * Scan packages for annotations.
-     * @return list of packages to scan annotations.
-     */
-    String[] scanPackages();
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface WithoutSecurityContext {
 }

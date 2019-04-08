@@ -39,4 +39,8 @@ public class RbacConfigurationProvider implements Configuration {
     public static void auth(User u) {
         user = u;
     }
+    @Override
+    public String[] scanPackages() {
+        return new String[] { "org.ss.rbac.test" };
+    }
 }

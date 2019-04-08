@@ -27,14 +27,14 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import org.ss.rbac.listener.AuditingEntityListener;
-import org.ss.rbac.listener.PermissionListener;
+import org.ss.rbac.listener.CrudOperationsListener;
 
 /**
  * Auditing superclass.
  * @author Alexandr Omeluaniuk
  */
 @MappedSuperclass
-@EntityListeners({ AuditingEntityListener.class, PermissionListener.class })
+@EntityListeners({ AuditingEntityListener.class, CrudOperationsListener.class })
 public abstract class Audit {
 // ================================== FIELDS ======================================================
     /** Owner. */
