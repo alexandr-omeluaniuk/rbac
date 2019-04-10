@@ -24,29 +24,33 @@
 package org.ss.rbac.proxy;
 
 import java.lang.reflect.Method;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.CriteriaUpdate;
+import org.ss.rbac.constant.PermissionOperation;
+import org.ss.rbac.entity.Audit;
+import org.ss.rbac.internal.api.PermissionResolver;
+import org.ss.rbac.internal.api.ServiceProvider;
 
 /**
- * Proxy for criteria builder.
+ * Proxy for CriteriaQuery.
+ * @see javax.persistence.criteria.CriteriaQuery
  * @author ss
  */
-public class CriteriaBuilderProxy extends AbstractProxy<CriteriaBuilder> {
+public class CriteriaQueryProxy extends AbstractProxy<CriteriaQuery> {
+    /** Permission resolver. */
+    private final PermissionResolver permissionResolver =
+            ServiceProvider.load(PermissionResolver.class);
     @Override
-    public Object doInvoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if ("createCriteriaDelete".equals(method.getName())) {
-            CriteriaDelete criteria = (CriteriaDelete) method.invoke(origin, args);
-            return new CriteriaDeleteProxy().proxying(criteria, CriteriaDelete.class);
-        } else if ("createCriteriaUpdate".equals(method.getName())) {
-            CriteriaUpdate criteria = (CriteriaUpdate) method.invoke(origin, args);
-            return new CriteriaUpdateProxy().proxying(criteria, CriteriaUpdate.class);
-        } else if ("createQuery".equals(method.getName()) && args.length == 1) {
-            CriteriaQuery criteria = (CriteriaQuery) method.invoke(origin, args);
-            return new CriteriaQueryProxy().proxying(criteria, CriteriaQuery.class);
-        } else {
-            return method.invoke(origin, args);
+    protected Object doInvoke(Object proxy, Method method, Object[] args) throws Throwable {
+        switch (method.getName()) {
+            case "from":
+                Class entityClass = (Class) args[0];
+                if (Audit.class.isAssignableFrom(entityClass)) {
+                    permissionResolver.resolveAccessToOperation(entityClass,
+                            PermissionOperation.READ);
+                }
+                return method.invoke(this.origin, args);
+            default:
+                return method.invoke(this.origin, args);
         }
     }
 }

@@ -75,7 +75,7 @@ public class PermissionResolverImpl implements PermissionResolver {
                 }
             }
             LOG.log(Level.INFO, "[resolveAccessToOperation] no permissions found");
-            throw new OperationDeniedException(operation, entityClass);
+            throw new OperationDeniedException(operation, entityClass, currentUser);
         }
     }
 // ==================================== PRIVATE ===================================================

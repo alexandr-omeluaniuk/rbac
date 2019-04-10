@@ -24,9 +24,15 @@
 package org.ss.rbac.test;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.criteria.Root;
 import org.junit.Assert;
 import org.junit.Test;
 import org.ss.rbac.constant.PermissionOperation;
@@ -172,6 +178,107 @@ public class JPAOperationsTest extends DatabaseTest {
                 Product.class);
         em.refresh(product);
         Assert.assertNotNull(product.getName());
+    }
+    @Test
+    public void testCriteriaDelete() {
+        LOG.log(System.Logger.Level.INFO, "----------------- testCriteriaDelete -----------------");
+        EntityManager em = getEntityManager();
+        Product product = prepareProduct(em, false);
+        EntityTransaction tx = em.getTransaction();
+        // without permissions
+        try {
+            tx.begin();
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaDelete<Product> query = cb.createCriteriaDelete(Product.class);
+            Root<Product> root = query.from(Product.class);
+            query.where(cb.isNotNull(root.get("id")));
+            em.createQuery(query).executeUpdate();
+            tx.commit();
+            Assert.fail("Not permitted!");
+        } catch (Exception ex) {
+            tx.rollback();
+            Assert.assertTrue("Incorrect exception!",
+                    isCorrectException(ex, PermissionOperation.DELETE));
+        }
+        // with permission
+        Set<PermissionOperation> permissions = new HashSet<>();
+        permissions.add(PermissionOperation.DELETE);
+        permissionService.setDataPermissions(permissions, PrincipalType.USER, currentUser().getId(),
+                Product.class);
+        tx.begin();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaDelete<Product> query = cb.createCriteriaDelete(Product.class);
+        Root<Product> root = query.from(Product.class);
+        query.where(cb.isNotNull(root.get("id")));
+        em.createQuery(query).executeUpdate();
+        tx.commit();
+    }
+    @Test
+    public void testCriteriaUpdate() {
+        LOG.log(System.Logger.Level.INFO, "----------------- testCriteriaUpdate -----------------");
+        EntityManager em = getEntityManager();
+        Product product = prepareProduct(em, false);
+        EntityTransaction tx = em.getTransaction();
+        final String name = "LaLaLa";
+        // without permissions
+        try {
+            tx.begin();
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaUpdate<Product> query = cb.createCriteriaUpdate(Product.class);
+            Root<Product> root = query.from(Product.class);
+            query.set("name", name).where(cb.isNotNull(root.get("id")));
+            em.createQuery(query).executeUpdate();
+            tx.commit();
+            Assert.fail("Not permitted!");
+        } catch (Exception ex) {
+            tx.rollback();
+            Assert.assertTrue("Incorrect exception!",
+                    isCorrectException(ex, PermissionOperation.UPDATE));
+        }
+        // with permission
+        Set<PermissionOperation> permissions = new HashSet<>();
+        permissions.add(PermissionOperation.UPDATE);
+        permissions.add(PermissionOperation.READ);
+        permissionService.setDataPermissions(permissions, PrincipalType.USER, currentUser().getId(),
+                Product.class);
+        tx.begin();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaUpdate<Product> query = cb.createCriteriaUpdate(Product.class);
+        Root<Product> root = query.from(Product.class);
+        query.set("name", name).where(cb.isNotNull(root.get("id")));
+        em.createQuery(query).executeUpdate();
+        tx.commit();
+        product = em.find(Product.class, product.getId());
+        Assert.assertEquals(name, product.getName());
+    }
+    @Test
+    public void testCriteriaQuery() {
+        LOG.log(System.Logger.Level.INFO, "----------------- testCriteriaQuery ------------------");
+        EntityManager em = getEntityManager();
+        Product product = prepareProduct(em, false);
+        // without permissions
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Product> query = cb.createQuery(Product.class);
+            Root<Product> root = query.from(Product.class);
+            query.select(root).where(cb.isNotNull(root.get("id")));
+            em.createQuery(query).getResultList();
+            Assert.fail("Not permitted!");
+        } catch (Exception ex) {
+            Assert.assertTrue("Incorrect exception!",
+                    isCorrectException(ex, PermissionOperation.READ));
+        }
+        // with permission
+        Set<PermissionOperation> permissions = new HashSet<>();
+        permissions.add(PermissionOperation.READ);
+        permissionService.setDataPermissions(permissions, PrincipalType.USER, currentUser().getId(),
+                Product.class);
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Product> query = cb.createQuery(Product.class);
+        Root<Product> root = query.from(Product.class);
+        query.select(root).where(cb.isNotNull(root.get("id")));
+        List<Product> list = em.createQuery(query).getResultList();
+        Assert.assertEquals(1, list.size());
     }
 // ========================================= PRIVATE ==============================================
     private boolean isCorrectException(Throwable e, PermissionOperation operation) {

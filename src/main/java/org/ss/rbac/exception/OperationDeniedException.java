@@ -25,6 +25,7 @@ package org.ss.rbac.exception;
 
 import org.ss.rbac.constant.PermissionOperation;
 import org.ss.rbac.entity.Audit;
+import org.ss.rbac.entity.User;
 
 /**
  * No permission for operation.
@@ -37,10 +38,13 @@ public class OperationDeniedException extends Exception {
      * Constructor.
      * @param operation permission operation.
      * @param entityClass entity class.
+     * @param user who invoked an error.
      */
     public OperationDeniedException(PermissionOperation operation,
-            Class<? extends Audit> entityClass) {
-        super("No permission for operation: " + operation.name() + " for " + entityClass.getName());
+            Class<? extends Audit> entityClass, User user) {
+        super("No permission for operation: " + operation.name()
+                + ", was applied for entity " + entityClass.getName()
+                + ", was performed by user " + user);
         this.operation = operation;
     }
     /**
